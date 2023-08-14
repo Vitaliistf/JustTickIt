@@ -1,4 +1,4 @@
-package org.vitaliistf.todo.entity;
+package org.vitaliistf.todo.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
