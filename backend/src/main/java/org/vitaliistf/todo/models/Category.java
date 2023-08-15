@@ -1,9 +1,12 @@
 package org.vitaliistf.todo.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Data;
-
-import java.util.Collection;
 
 @Entity
 @Data
@@ -26,6 +29,4 @@ public class Category {
     @Column(name = "uncompleted_count")
     private Long uncompletedCount;
 
-    @OneToMany(mappedBy = "categoryByCategoryId")
-    private Collection<Task> tasksById;
 }

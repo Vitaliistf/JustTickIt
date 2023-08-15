@@ -1,10 +1,9 @@
 package org.vitaliistf.todo.service;
 
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.vitaliistf.todo.models.Task;
-
-import java.util.List;
 
 public interface TaskService {
     List<Task> findAll();
@@ -15,7 +14,8 @@ public interface TaskService {
 
     void deleteById(Long id);
 
-    Page<Task> findByParams(String text, Integer completed, Long priorityId, Long categoryId, PageRequest paging);
+    Page<Task> findByParams(String text, Integer completed, Long priorityId,
+                            Long categoryId, PageRequest paging);
 
     Task findById(Long id);
 }

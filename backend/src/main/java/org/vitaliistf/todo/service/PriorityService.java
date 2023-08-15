@@ -1,8 +1,7 @@
 package org.vitaliistf.todo.service;
 
-import org.vitaliistf.todo.models.Priority;
-
 import java.util.List;
+import org.vitaliistf.todo.models.Priority;
 
 public interface PriorityService {
 
