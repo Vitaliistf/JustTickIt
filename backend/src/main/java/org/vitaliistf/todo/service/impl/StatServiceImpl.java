@@ -15,7 +15,7 @@ public class StatServiceImpl implements StatService {
 
     public Stat findOne() {
         return statRepository.findById(1L).orElseThrow(
-                () -> new NoSuchElementException("Cannot find such stat.")
+                () -> new NoSuchElementException("Cannot find stat.")
         );
     }
 
