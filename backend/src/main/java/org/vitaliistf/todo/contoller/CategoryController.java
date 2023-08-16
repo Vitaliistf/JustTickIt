@@ -1,5 +1,6 @@
 package org.vitaliistf.todo.contoller;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,14 +36,14 @@ public class CategoryController {
     }
 
     @PostMapping
-    public CategoryResponseDto add(@RequestBody CategoryRequestDto categoryRequestDto) {
+    public CategoryResponseDto add(@RequestBody @Valid CategoryRequestDto categoryRequestDto) {
         Category category = categoryMapper.toModel(categoryRequestDto);
         return categoryMapper.toDto(categoryService.save(category));
     }
 
     @PutMapping("/{id}")
     public CategoryResponseDto update(@PathVariable Long id,
-                                      @RequestBody CategoryRequestDto categoryRequestDto) {
+                                      @RequestBody @Valid CategoryRequestDto categoryRequestDto) {
         Category category = categoryMapper.toModel(categoryRequestDto);
         return categoryMapper.toDto(categoryService.update(id, category));
     }

@@ -1,5 +1,6 @@
 package org.vitaliistf.todo.contoller;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,14 +35,14 @@ public class PriorityController {
     }
 
     @PostMapping
-    public PriorityResponseDto save(@RequestBody PriorityRequestDto priorityRequestDto) {
+    public PriorityResponseDto save(@RequestBody @Valid PriorityRequestDto priorityRequestDto) {
         Priority priority = priorityMapper.toModel(priorityRequestDto);
         return priorityMapper.toDto(priorityService.save(priority));
     }
 
     @PutMapping("/{id}")
     public PriorityResponseDto update(@PathVariable Long id,
-                                      @RequestBody PriorityRequestDto priorityRequestDto) {
+                                      @RequestBody @Valid PriorityRequestDto priorityRequestDto) {
         Priority priority = priorityMapper.toModel(priorityRequestDto);
         return priorityMapper.toDto(priorityService.update(id, priority));
     }

@@ -1,5 +1,6 @@
 package org.vitaliistf.todo.contoller;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,14 +38,14 @@ public class TaskController {
     }
 
     @PostMapping
-    public TaskResponseDto add(@RequestBody TaskRequestDto taskRequestDto) {
+    public TaskResponseDto add(@RequestBody @Valid TaskRequestDto taskRequestDto) {
         Task task = taskMapper.toModel(taskRequestDto);
         return taskMapper.toDto(taskService.save(task));
     }
 
     @PutMapping("/{id}")
     public TaskResponseDto update(@PathVariable Long id,
-                                  @RequestBody TaskRequestDto taskRequestDto) {
+                                  @RequestBody @Valid TaskRequestDto taskRequestDto) {
         Task task = taskMapper.toModel(taskRequestDto);
         return taskMapper.toDto(taskService.update(id, task));
     }
@@ -60,7 +61,7 @@ public class TaskController {
     }
 
     @PostMapping("/search")
-    public Page<TaskResponseDto> search(@RequestBody TaskSearchObject taskSearchValues) {
+    public Page<TaskResponseDto> search(@RequestBody @Valid TaskSearchObject taskSearchValues) {
 
         String text = taskSearchValues.getTitle();
 
