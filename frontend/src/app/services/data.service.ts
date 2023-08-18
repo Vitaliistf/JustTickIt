@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Category} from "../models/category";
+import {Task} from "../models/task";
 import {TestData} from "../data/test.data";
 
 @Injectable({
@@ -11,5 +12,9 @@ export class DataService {
 
     getCategories(): Category[] {
         return TestData.categories;
+    }
+
+    getTasks(): Task[] {
+        return TestData.tasks;
     }
 }
