@@ -24,29 +24,36 @@
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                     Date
                                 </th>
-                                <th class="text-secondary opacity-7"></th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                  Completed
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr *ngFor="let task of tasks">
+                            <tr *ngFor="let task of tasks" [class.completed]="task.completed">
                                 <td>
                                     <h6 class="px-2 mb-0 text-sm">{{task.title}}</h6>
                                 </td>
                                 <td>
                                     <p class="text-xs font-weight-bold mb-0">{{task.category?.title}}</p>
                                 </td>
-                                <td class="align-middle text-center text-sm">
-                                    <span class="badge badge-sm bg-gradient-success">{{task.priority?.title}}</span>
+                                <td>
+                                    <p class="text-center text-xs font-weight-bold mb-0">{{task.priority?.title}}</p>
                                 </td>
                                 <td class="align-middle text-center">
-                                    <span class="text-secondary text-xs font-weight-bold">{{task.date?.toDateString()}}</span>
+                                    <span class="text-secondary text-xs font-weight-bold">{{task.date | date : 'medium'}}</span>
                                 </td>
-                                <td class="align-middle">
-                                    <a href="javascript:;"
-                                       class="text-secondary font-weight-bold text-xs"
-                                       data-toggle="tooltip" data-original-title="Edit user">
-                                        Edit
-                                    </a>
+                                <td class="align-middle text-center">
+                                    <div class="form-check">
+                                      <label class="form-check-label">
+                                        <input class="form-check-input" type="checkbox" value=""
+                                               [checked]="task.completed"
+                                               (click)="toggleTaskCompleted(task)">
+                                        <span class="form-check-sign">
+                                          <span class="check"></span>
+                                        </span>
+                                      </label>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>
