@@ -1,67 +1,105 @@
 <div class="container-fluid py-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="card my-4">
-                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                        <h6 class="text-white text-capitalize ps-3">Task list</h6>
-                    </div>
-                </div>
-                <div class="card-body px-0 pb-2">
-                    <div class="table-responsive p-0">
-                        <table class="table align-items-center mb-0">
-                            <thead>
-                            <tr>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                    Title
-                                </th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                    Category
-                                </th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                    Priority
-                                </th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                    Date
-                                </th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                  Completed
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr *ngFor="let task of tasks" [class.completed]="task.completed">
-                                <td>
-                                    <h6 class="px-2 mb-0 text-sm">{{task.title}}</h6>
-                                </td>
-                                <td>
-                                    <p class="text-xs font-weight-bold mb-0">{{task.category?.title}}</p>
-                                </td>
-                                <td>
-                                    <p class="text-center text-xs font-weight-bold mb-0">{{task.priority?.title}}</p>
-                                </td>
-                                <td class="align-middle text-center">
-                                    <span class="text-secondary text-xs font-weight-bold">{{task.date | date : 'medium'}}</span>
-                                </td>
-                                <td class="align-middle text-center">
-                                    <div class="form-check">
-                                      <label class="form-check-label">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                               [checked]="task.completed"
-                                               (click)="toggleTaskCompleted(task)">
-                                        <span class="form-check-sign">
-                                          <span class="check"></span>
-                                        </span>
-                                      </label>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="card my-4">
+        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+          <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+            <h6 class="text-white text-capitalize ps-3">Task list</h6>
+          </div>
         </div>
+        <div class="card-body px-0 pb-2">
+          <div class="table-responsive p-0">
+            <table [dataSource]="dataSource" mat-table>
+
+              <ng-container matColumnDef="color">
+                <th *matHeaderCellDef mat-header-cell></th>
+                <td *matCellDef="let task" [style.background-color]="getPriorityColor(task)" mat-cell></td>
+              </ng-container>
+
+              <ng-container matColumnDef="title">
+                <th *matHeaderCellDef mat-header-cell>Title</th>
+                <td *matCellDef="let task" [class.completed]="task.completed" mat-cell>
+                  {{task.title}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="date">
+                <th *matHeaderCellDef mat-header-cell>Date</th>
+                <td *matCellDef="let task" [ngClass]="{'completed': task.completed, 'nodate': task.date == null}" mat-cell>
+                  {{task.date | date : "medium"}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="priority">
+                <th *matHeaderCellDef mat-header-cell>Priority</th>
+                <td *matCellDef="let task" [ngClass]="{'completed': task.completed, 'nopriority': task.priority == null}" mat-cell>
+                  {{task.priority ? task.priority.title : "No priority"}}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="category">
+                <th *matHeaderCellDef mat-header-cell>Category</th>
+                <td *matCellDef="let task" [ngClass]="{'completed': task.completed, 'nocategory': task.category == null}" mat-cell>
+                  {{task.category ? task.category.title : "No category"}}
+                </td>
+              </ng-container>
+
+              <tr *matHeaderRowDef="displayedColumns;" mat-header-row></tr>
+              <tr *matRowDef="let row; columns : displayedColumns;" mat-row></tr>
+            </table>
+            <!--                        <table class="table align-items-center mb-0">-->
+            <!--                            <thead>-->
+            <!--                            <tr>-->
+            <!--                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">-->
+            <!--                                    Title-->
+            <!--                                </th>-->
+            <!--                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">-->
+            <!--                                    Category-->
+            <!--                                </th>-->
+            <!--                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">-->
+            <!--                                    Priority-->
+            <!--                                </th>-->
+            <!--                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">-->
+            <!--                                    Date-->
+            <!--                                </th>-->
+            <!--                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">-->
+            <!--                                  Completed-->
+            <!--                                </th>-->
+            <!--                            </tr>-->
+            <!--                            </thead>-->
+            <!--                            <tbody>-->
+            <!--                            <tr *ngFor="let task of tasks" [class.completed]="task.completed">-->
+            <!--                                <td>-->
+            <!--                                    <h6 class="px-2 mb-0 text-sm">{{task.title}}</h6>-->
+            <!--                                </td>-->
+            <!--                                <td>-->
+            <!--                                    <p class="text-xs font-weight-bold mb-0">{{task.category?.title}}</p>-->
+            <!--                                </td>-->
+            <!--                                <td>-->
+            <!--                                    <p class="text-center text-xs font-weight-bold mb-0">{{task.priority?.title}}</p>-->
+            <!--                                </td>-->
+            <!--                                <td class="align-middle text-center">-->
+            <!--                                    <span class="text-secondary text-xs font-weight-bold">{{task.date | date : 'medium'}}</span>-->
+            <!--                                </td>-->
+            <!--                                <td class="align-middle text-center">-->
+            <!--                                    <div class="form-check">-->
+            <!--                                      <label class="form-check-label">-->
+            <!--                                        <input class="form-check-input" type="checkbox" value=""-->
+            <!--                                               [checked]="task.completed"-->
+            <!--                                               (click)="toggleTaskCompleted(task)">-->
+            <!--                                        <span class="form-check-sign">-->
+            <!--                                          <span class="check"></span>-->
+            <!--                                        </span>-->
+            <!--                                      </label>-->
+            <!--                                    </div>-->
+            <!--                                </td>-->
+            <!--                            </tr>-->
+            <!--                            </tbody>-->
+            <!--                        </table>-->
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 

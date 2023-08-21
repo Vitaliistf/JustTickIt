@@ -22,7 +22,7 @@ export class CategoriesComponent implements OnInit {
   }
 
   showTasksByCategory(category: Category) {
-    this.selectedCategory = category
+    this.selectedCategory = category;
     return this.dataService.fillTasksByCategory(category);
   }
 }
