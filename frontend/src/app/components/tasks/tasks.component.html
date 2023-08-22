@@ -2,7 +2,7 @@
   <div class="card-header card-header-warning">
     <h4 class="card-title">Task list</h4>
   </div>
-  <div class="card-body table-responsive">
+  <div class="card-body table-responsive" *ngIf="tasks.length > 0">
 
     <table [dataSource]="dataSource" mat-table matSort>
 
@@ -24,7 +24,8 @@
 
       <ng-container matColumnDef="date">
         <th *matHeaderCellDef mat-header-cell mat-sort-header> Date</th>
-        <td *matCellDef="let task" [ngClass]="{'completed': task.completed}"
+        <td *matCellDef="let task"
+            [ngClass]="{'completed': task.completed, 'novalue': task.date == null}"
             class="col-date"
             mat-cell>
 
@@ -36,7 +37,7 @@
       <ng-container matColumnDef="priority">
         <th *matHeaderCellDef mat-header-cell mat-sort-header>Priority</th>
         <td *matCellDef="let task" class="col-priority"
-            [ngClass]="{'completed': task.completed}"
+            [ngClass]="{'completed': task.completed, 'novalue': task.priority == null}"
             mat-cell>
 
           {{task.priority ? task.priority.title : "No priority"}}
@@ -47,9 +48,8 @@
       <ng-container matColumnDef="category">
         <th *matHeaderCellDef mat-header-cell mat-sort-header>Category</th>
         <td *matCellDef="let task" class="col-category"
-            [ngClass]="{'completed': task.completed}"
-            mat-cell
-        >
+            [ngClass]="{'completed': task.completed, 'novalue': task.category == null}"
+            mat-cell>
 
           {{task.category ? task.category.title : "No category"}}
 
@@ -63,5 +63,9 @@
     </table>
 
     <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons></mat-paginator>
+  </div>
+
+  <div *ngIf="tasks?.length == 0">
+    <p class="not-found">No tasks found.</p>
   </div>
 </div>

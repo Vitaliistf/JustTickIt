@@ -15,12 +15,15 @@ export class TasksComponent implements OnInit, AfterViewInit{
   dataSource: MatTableDataSource<Task> = new MatTableDataSource<Task>();
 
   @ViewChild(MatPaginator, {static:false})
-  private paginator: MatPaginator | undefined;
+  // @ts-ignore
+  private paginator: MatPaginator;
 
   @ViewChild(MatSort, {static:false})
-  private sort: MatSort | undefined;
+  // @ts-ignore
+  private sort: MatSort;
 
-  tasks: Task[] | undefined;
+  // @ts-ignore
+  tasks: Task[];
 
   constructor(private dataService: DataService) {
   }
@@ -47,7 +50,6 @@ export class TasksComponent implements OnInit, AfterViewInit{
   }
 
     private refreshTable() {
-      // @ts-ignore
       this.dataSource.data = this.tasks;
 
       this.addTableObjects();
@@ -72,9 +74,7 @@ export class TasksComponent implements OnInit, AfterViewInit{
   }
 
   private addTableObjects() {
-    // @ts-ignore
     this.dataSource.sort = this.sort;
-    // @ts-ignore
     this.dataSource.paginator = this.paginator;
   }
 
