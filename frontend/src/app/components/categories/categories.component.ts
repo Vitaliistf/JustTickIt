@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {DataService} from "../../services/data.service";
 import {Category} from "../../models/category";
 
@@ -9,20 +9,27 @@ import {Category} from "../../models/category";
 })
 export class CategoriesComponent implements OnInit {
 
-  categories: Category[] | undefined;
-  selectedCategory: Category | undefined;
+  @Input()
+  categories!: Category[];
+
+  @Output()
+  selectCategory = new EventEmitter<Category>();
+
+  selectedCategory!: Category;
 
   constructor(private dataService: DataService) {
   }
 
   ngOnInit(): void {
-    this.dataService.categoriesSubject.subscribe(
-      categories => this.categories = categories
-    );
   }
 
   showTasksByCategory(category: Category) {
+    if(this.selectedCategory === category) {
+      return;
+    }
+
     this.selectedCategory = category;
-    return this.dataService.fillTasksByCategory(category);
+
+    this.selectCategory.emit(this.selectedCategory);
   }
 }

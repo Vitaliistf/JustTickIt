@@ -1,4 +1,12 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import {DataService} from "../../services/data.service";
 import {Task} from 'src/app/models/task';
 import {MatTableDataSource} from "@angular/material/table";
@@ -10,32 +18,35 @@ import {MatSort} from "@angular/material/sort";
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.css']
 })
-export class TasksComponent implements OnInit, AfterViewInit{
+export class TasksComponent implements OnInit {
   displayedColumns: string[] = ['color', 'title', 'date', 'priority', 'category'];
-  dataSource: MatTableDataSource<Task> = new MatTableDataSource<Task>();
+
+  dataSource!: MatTableDataSource<Task>;
 
   @ViewChild(MatPaginator, {static:false})
-  // @ts-ignore
-  private paginator: MatPaginator;
+  private paginator!: MatPaginator;
 
   @ViewChild(MatSort, {static:false})
-  // @ts-ignore
-  private sort: MatSort;
+  private sort!: MatSort;
 
-  // @ts-ignore
-  tasks: Task[];
+  tasks!: Task[];
+
+  @Input('tasks')
+  set setTasks(tasks: Task[]) {
+    this.tasks = tasks;
+    this.fillTable();
+  }
+
+  @Output()
+  updateTask = new EventEmitter<Task>();
 
   constructor(private dataService: DataService) {
   }
 
   ngOnInit(): void {
-    this.dataService.tasksSubject.subscribe(tasks => this.tasks = tasks);
-
-    this.refreshTable();
-  }
-
-  ngAfterViewInit(): void {
-    this.addTableObjects();
+    // this.dataService.getAllTasks().subscribe(tasks => this.tasks = tasks);
+    this.dataSource = new MatTableDataSource();
+    this.fillTable();
   }
 
   toggleTaskCompleted(task: Task) {
@@ -43,13 +54,21 @@ export class TasksComponent implements OnInit, AfterViewInit{
   }
 
   getPriorityColor(task: Task) {
+    if (task.completed) {
+      return '#F8F9FA';
+    }
     if(task.priority && task.priority.color) {
       return task.priority.color;
     }
     return '#fff';
   }
 
-    private refreshTable() {
+    private fillTable() {
+
+      if(!this.dataSource) {
+        return;
+      }
+
       this.dataSource.data = this.tasks;
 
       this.addTableObjects();
@@ -78,5 +97,8 @@ export class TasksComponent implements OnInit, AfterViewInit{
     this.dataSource.paginator = this.paginator;
   }
 
+  private onClickTask(task: Task) {
+    this.updateTask.emit(task);
+  }
 
 }

@@ -1,6 +1,6 @@
 <div class="wrapper ">
 
-  <app-categories></app-categories>
+  <app-categories (selectCategory)="onSelectCategory($event)" [categories]="categories"></app-categories>
 
   <div class="main-panel">
     <!-- Navbar -->
@@ -79,7 +79,10 @@
         <div class="row">
 
           <div class="col-12">
-            <app-tasks></app-tasks>
+            <app-tasks
+                    [tasks]="tasks"
+                    (updateTask)="onUpdateTask($event)"
+            ></app-tasks>
           </div>
         </div>
       </div>
