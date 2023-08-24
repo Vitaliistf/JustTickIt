@@ -20,6 +20,7 @@ import {MatSelectModule} from "@angular/material/select";
 import { ConfirmDialogComponent } from './dialog/confirm-dialog/confirm-dialog.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import { TaskDatePipe } from './pipes/task-date.pipe';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { TaskDatePipe } from './pipes/task-date.pipe';
     MatOptionModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]

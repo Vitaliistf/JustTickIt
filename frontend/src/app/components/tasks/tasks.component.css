@@ -24,7 +24,7 @@
 }
 
 .col-operations {
-  width: 8%;
+  width: 10%;
 }
 
 .col-color {
@@ -33,4 +33,24 @@
 
 .col-date {
   width: 10% !important;
+}
+
+.delete-icon {
+  cursor: pointer;
+  color: #EA6561;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+.edit-icon {
+  cursor: pointer;
+  color: #9A9A9A;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+.mat-header-cell {
+  font-size: 1.063rem;
+  color: #9C27B0 !important;
+  font-weight: normal;
 }
