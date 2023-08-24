@@ -66,4 +66,17 @@ export class AppComponent implements OnInit{
       )
     })
   }
+
+  onDeleteCategory(category: Category | null) {
+    this.dataService.deleteCategory(<Category> category).subscribe(() => {
+      this.selectedCategory = null;
+      this.onSelectCategory(this.selectedCategory);
+    })
+  }
+
+  onUpdateCategory(category: Category | null) {
+    this.dataService.updateCategory(<Category> category).subscribe(() => {
+      this.onSelectCategory(this.selectedCategory);
+    })
+  }
 }

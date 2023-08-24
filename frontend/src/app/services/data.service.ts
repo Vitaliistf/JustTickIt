@@ -47,4 +47,11 @@ export class DataService {
         return this.taskDao.search(category, searchText, status, priority);
     }
 
+  updateCategory(category: Category) {
+      return this.categoryDao.update(category);
+    }
+
+  deleteCategory(category: Category) {
+      return this.categoryDao.delete(category.id);
+    }
 }
