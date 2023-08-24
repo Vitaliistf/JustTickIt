@@ -33,3 +33,17 @@
   text-decoration: underline;
   cursor: pointer;
 }
+
+.category {
+  padding-bottom: 20px;
+}
+
+.category:after {
+  content: '';
+  position: absolute;
+  margin-top: 20px;
+  right: 15px;
+  height: 1px;
+  width: calc(100% - 30px);
+  background-color: rgba(180, 180, 180, 0.3);
+}

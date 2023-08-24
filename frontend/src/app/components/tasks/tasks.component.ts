@@ -14,6 +14,7 @@ import {MatSort} from "@angular/material/sort";
 import {EditTaskDialogComponent} from "../../dialog/edit-task-dialog/edit-task-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {ConfirmDialogComponent} from "../../dialog/confirm-dialog/confirm-dialog.component";
+import {Category} from "../../models/category";
 
 @Component({
   selector: 'app-tasks',
@@ -45,6 +46,9 @@ export class TasksComponent implements OnInit {
 
   @Output()
   deleteTask = new EventEmitter<Task>();
+
+  @Output()
+  selectCategory = new EventEmitter<Category>();
 
   constructor(private dataService: DataService,
               private dialog: MatDialog) {
@@ -154,5 +158,9 @@ export class TasksComponent implements OnInit {
   onToggleStatus(task: Task) {
     task.completed = !task.completed;
     this.updateTask.emit(task);
+  }
+
+  onSelectCategory(category: Category) {
+    this.selectCategory.emit(category);
   }
 }

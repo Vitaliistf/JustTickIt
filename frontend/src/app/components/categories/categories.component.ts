@@ -12,10 +12,11 @@ export class CategoriesComponent implements OnInit {
   @Input()
   categories!: Category[];
 
-  @Output()
-  selectCategory = new EventEmitter<Category>();
+  @Input()
+  selectedCategory!: Category | null;
 
-  selectedCategory!: Category;
+  @Output()
+  selectCategory = new EventEmitter<Category | null>();
 
   constructor(private dataService: DataService) {
   }
@@ -23,7 +24,7 @@ export class CategoriesComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  showTasksByCategory(category: Category) {
+  showTasksByCategory(category: Category | null) {
     if(this.selectedCategory === category) {
       return;
     }
