@@ -108,6 +108,17 @@ export class TasksComponent implements OnInit {
       autoFocus: false
     });
     dialogRef.afterClosed().subscribe(result => {
+
+      if(result === 'complete') {
+        task.completed = true;
+        return;
+      }
+
+      if(result === 'activate') {
+        task.completed = false;
+        return;
+      }
+
       if(result === 'delete') {
         this.deleteTask.emit(task);
         return;

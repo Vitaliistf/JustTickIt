@@ -1,6 +1,7 @@
 <div class="wrapper ">
 
-  <app-categories (selectCategory)="onSelectCategory($event)" [categories]="categories"></app-categories>
+  <app-categories (selectCategory)="onSelectCategory($event)"
+                  [categories]="categories"></app-categories>
 
   <div class="main-panel">
     <!-- Navbar -->
@@ -9,7 +10,8 @@
         <div class="navbar-wrapper">
           <a class="navbar-brand" href="#pablo">Dashboard</a>
         </div>
-        <button aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation"
+        <button aria-controls="navigation-index" aria-expanded="false"
+                aria-label="Toggle navigation"
                 class="navbar-toggler" data-toggle="collapse" type="button">
           <span class="sr-only">Toggle navigation</span>
           <span class="navbar-toggler-icon icon-bar"></span>
@@ -44,7 +46,8 @@
                   Some Actions
                 </p>
               </a>
-              <div aria-labelledby="navbarDropdownMenuLink" class="dropdown-menu dropdown-menu-right">
+              <div aria-labelledby="navbarDropdownMenuLink"
+                   class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="#">Mike John responded to your email</a>
                 <a class="dropdown-item" href="#">You have 5 new tasks</a>
                 <a class="dropdown-item" href="#">You're now friend with Andrew</a>
@@ -60,7 +63,8 @@
                   Account
                 </p>
               </a>
-              <div aria-labelledby="navbarDropdownProfile" class="dropdown-menu dropdown-menu-right">
+              <div aria-labelledby="navbarDropdownProfile"
+                   class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="#">Profile</a>
                 <a class="dropdown-item" href="#">Settings</a>
                 <div class="dropdown-divider"></div>
@@ -80,9 +84,9 @@
 
           <div class="col-12">
             <app-tasks
-                    (updateTask)="onUpdateTask($event)"
-                    (deleteTask)="onDeleteTask($event)"
-                    [tasks]="tasks"
+              (deleteTask)="onDeleteTask($event)"
+              (updateTask)="onUpdateTask($event)"
+              [tasks]="tasks"
             ></app-tasks>
           </div>
         </div>
@@ -168,15 +172,10 @@
         </a>
       </li>
       <li class="button-container">
-        <a class="btn btn-primary btn-block" href="https://www.creative-tim.com/product/material-dashboard"
+        <a class="btn btn-primary btn-block"
+           href="https://www.creative-tim.com/product/material-dashboard"
            target="_blank">Free Download</a>
       </li>
-      <!-- <li class="header-title">Want more components?</li>
-          <li class="button-container">
-              <a href="https://www.creative-tim.com/product/material-dashboard-pro" target="_blank" class="btn btn-warning btn-block">
-                Get the pro version
-              </a>
-          </li> -->
       <li class="button-container">
         <a class="btn btn-default btn-block"
            href="https://demos.creative-tim.com/material-dashboard/docs/2.1/getting-started/introduction.html"
@@ -185,15 +184,18 @@
         </a>
       </li>
       <li class="button-container github-star">
-        <a aria-label="Star ntkme/github-buttons on GitHub" class="github-button" data-icon="octicon-star"
+        <a aria-label="Star ntkme/github-buttons on GitHub" class="github-button"
+           data-icon="octicon-star"
            data-show-count="true" data-size="large"
            href="https://github.com/creativetimofficial/material-dashboard">Star</a>
       </li>
       <li class="header-title">Thank you for 95 shares!</li>
       <li class="button-container text-center">
-        <button class="btn btn-round btn-twitter" id="twitter"><i class="fa fa-twitter"></i> &middot; 45
+        <button class="btn btn-round btn-twitter" id="twitter"><i class="fa fa-twitter"></i>
+          &middot; 45
         </button>
-        <button class="btn btn-round btn-facebook" id="facebook"><i class="fa fa-facebook-f"></i> &middot; 50
+        <button class="btn btn-round btn-facebook" id="facebook"><i class="fa fa-facebook-f"></i>
+          &middot; 50
         </button>
         <br>
         <br>
