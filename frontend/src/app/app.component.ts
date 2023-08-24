@@ -35,10 +35,35 @@ export class AppComponent implements OnInit{
         null,
         null,
         null
-    ).subscribe(tasks => this.tasks = tasks);
+    ).subscribe(
+      tasks =>
+        this.tasks = tasks
+    );
   }
 
   onUpdateTask(task: Task) {
-    console.log(task);
+    this.dataService.updateTask(task).subscribe(() => {
+      this.dataService.searchTasks(
+        this.selectedCategory,
+        null,
+        null,
+        null
+      ).subscribe(tasks =>
+        this.tasks = tasks
+      )
+    })
+  }
+
+  onDeleteTask(task: Task) {
+    this.dataService.deleteTask(task).subscribe(() => {
+      this.dataService.searchTasks(
+        this.selectedCategory,
+        null,
+        null,
+        null
+      ).subscribe(tasks =>
+        this.tasks = tasks
+      )
+    })
   }
 }

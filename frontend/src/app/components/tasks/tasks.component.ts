@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   Component,
   EventEmitter,
   Input,
@@ -12,6 +11,8 @@ import {Task} from 'src/app/models/task';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
+import {EditTaskDialogComponent} from "../../dialog/edit-task-dialog/edit-task-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-tasks',
@@ -40,7 +41,11 @@ export class TasksComponent implements OnInit {
   @Output()
   updateTask = new EventEmitter<Task>();
 
-  constructor(private dataService: DataService) {
+  @Output()
+  deleteTask = new EventEmitter<Task>();
+
+  constructor(private dataService: DataService,
+              private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -97,8 +102,23 @@ export class TasksComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  private onClickTask(task: Task) {
-    this.updateTask.emit(task);
+  openEditTaskDialog(task: Task) {
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {
+      data: [task, 'Task editing'],
+      autoFocus: false
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result === 'delete') {
+        this.deleteTask.emit(task);
+        return;
+      }
+
+      if(result as Task) {
+        this.updateTask.emit(task);
+        return;
+      }
+      }
+    )
   }
 
 }

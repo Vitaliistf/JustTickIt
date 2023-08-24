@@ -8,3 +8,23 @@
   color: rgba(74, 74, 74, 0.98);
   text-align: center;
 }
+
+.pointer {
+  cursor: pointer;
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+.mat-mdc-dialog-content {
+  padding: 40px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.red {
+  color: red;
+}

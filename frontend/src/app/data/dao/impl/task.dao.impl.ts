@@ -1,6 +1,6 @@
 import {Task} from "../../../models/task";
 import {TaskDao} from "../task.dao";
-import {Observable, of} from "rxjs";
+import {EMPTY, Observable, of} from "rxjs";
 import {Category} from "../../../models/category";
 import {Priority} from "../../../models/priority";
 import {TestData} from "../../test.data";
@@ -13,8 +13,12 @@ export class TaskDaoImpl implements TaskDao {
   }
 
   delete(id: number): Observable<Task> {
-    // @ts-ignore
-    return undefined;
+    let tmpTask: Task | undefined = TestData.tasks.find(t => t.id === id);
+    if (tmpTask) {
+      TestData.tasks.splice(TestData.tasks.indexOf(tmpTask), 1);
+      return of(tmpTask);
+    }
+    return EMPTY;
   }
 
   get(id: number): Observable<Task> {
@@ -66,8 +70,12 @@ export class TaskDaoImpl implements TaskDao {
   }
 
   update(object: Task): Observable<Task> {
-    // @ts-ignore
-    return undefined;
+    const tmpTask = TestData.tasks.find(t => t.id === object.id);
+    if (tmpTask instanceof Task) {
+      TestData.tasks.splice(TestData.tasks.indexOf(tmpTask), 1, object);
+    }
+
+    return of(object);
   }
 
 }
