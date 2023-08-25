@@ -50,8 +50,14 @@ export class TasksComponent implements OnInit {
     this.priorities = priorities;
   }
 
+  @Input()
+  selectedCategory!: Category | null;
+
   @Output()
   updateTask = new EventEmitter<Task>();
+
+  @Output()
+  addTask = new EventEmitter<Task>();
 
   @Output()
   deleteTask = new EventEmitter<Task>();
@@ -203,5 +209,20 @@ export class TasksComponent implements OnInit {
       this.selectedPriorityFilter = value;
       this.filterByPriority.emit(this.selectedPriorityFilter);
     }
+  }
+
+  openAddTaskDialog() {
+    const task = new Task(0, '', false, undefined, this.selectedCategory == null ? undefined : this.selectedCategory);
+    const dialogRef = this.dialog.open(EditTaskDialogComponent, {
+      maxWidth: '600px',
+      data: [task, 'Task editing'],
+      autoFocus: false
+    });
+    dialogRef.afterClosed().subscribe(result => {
+        if(result) {
+          this.addTask.emit(task);
+        }
+      }
+    )
   }
 }

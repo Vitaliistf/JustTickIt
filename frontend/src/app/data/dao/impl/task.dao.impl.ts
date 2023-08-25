@@ -8,8 +8,15 @@ import {TestData} from "../../test.data";
 export class TaskDaoImpl implements TaskDao {
 
   create(object: Task): Observable<Task> {
-    // @ts-ignore
-    return undefined;
+    if(object.id === 0) {
+      object.id = this.getLastTaskId() + 1;
+    }
+    TestData.tasks.push(object);
+    return of(object);
+  }
+
+  private getLastTaskId(): number {
+    return Math.max.apply(Math, TestData.tasks.map(task => task.id));
   }
 
   delete(id: number): Observable<Task> {

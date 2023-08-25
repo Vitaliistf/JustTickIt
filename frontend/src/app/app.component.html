@@ -1,7 +1,6 @@
 <div class="wrapper ">
 
   <app-categories (selectCategory)="onSelectCategory($event)"
-
                   (deleteCategory)="onDeleteCategory($event)"
                   (updateCategory)="onUpdateCategory($event)"
 
@@ -92,7 +91,9 @@
               (deleteTask)="onDeleteTask($event)"
               (updateTask)="onUpdateTask($event)"
               (selectCategory)="onSelectCategory($event)"
+              (addTask)="onAddTask($event)"
 
+              [selectedCategory]="selectedCategory"
               (filterByStatus)="onFilterTasksByStatus($event)"
               (filterByPriority)="onFilterTasksByPriority($event)"
               (filterByTitle)="onSearchTasks($event)"

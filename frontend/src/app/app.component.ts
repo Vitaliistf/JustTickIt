@@ -110,4 +110,10 @@ export class AppComponent implements OnInit{
         this.tasks = tasks
     );
   }
+
+  onAddTask(task: Task) {
+    this.dataService.addTask(task).subscribe(
+      () => this.updateTasks()
+    );
+  }
 }

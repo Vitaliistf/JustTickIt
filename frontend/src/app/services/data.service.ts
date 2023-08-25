@@ -42,16 +42,20 @@ export class DataService {
       return this.taskDao.delete(task.id);
     }
 
+    addTask(task: Task): Observable<Task> {
+      return this.taskDao.create(task);
+    }
+
     searchTasks(category: Category | null, searchText: string | null, status: boolean | null, priority: Priority | null):
         Observable<Task[]> {
         return this.taskDao.search(category, searchText, status, priority);
     }
 
-  updateCategory(category: Category) {
+    updateCategory(category: Category) {
       return this.categoryDao.update(category);
     }
 
-  deleteCategory(category: Category) {
+    deleteCategory(category: Category) {
       return this.categoryDao.delete(category.id);
     }
 }
