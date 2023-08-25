@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { Task } from './models/task';
 import {DataService} from "./services/data.service";
 import {Category} from "./models/category";
+import {Priority} from "./models/priority";
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,14 @@ export class AppComponent implements OnInit{
 
   selectedCategory: Category | null = null;
 
+  statusFilter!: boolean | null;
+
+  searchTaskText = '';
+
+  priorityFilter!: Priority | null;
+
+  priorities!: Priority[];
+
   constructor(private dataService: DataService) {
   }
 
@@ -24,21 +33,16 @@ export class AppComponent implements OnInit{
     this.dataService.getAllCategories().subscribe(
         categories => this.categories = categories
     );
+    this.dataService.getAllPriorities().subscribe(
+      priorities => this.priorities = priorities
+    );
 
     this.onSelectCategory(null);
   }
 
   onSelectCategory(category: Category | null) {
     this.selectedCategory = category;
-    this.dataService.searchTasks(
-        this.selectedCategory,
-        null,
-        null,
-        null
-    ).subscribe(
-      tasks =>
-        this.tasks = tasks
-    );
+    this.updateTasks()
   }
 
   onUpdateTask(task: Task) {
@@ -78,5 +82,32 @@ export class AppComponent implements OnInit{
     this.dataService.updateCategory(<Category> category).subscribe(() => {
       this.onSelectCategory(this.selectedCategory);
     })
+  }
+
+  onSearchTasks(searchString: string) {
+    this.searchTaskText = searchString;
+    this.updateTasks();
+  }
+
+  onFilterTasksByStatus(status: null | boolean) {
+    this.statusFilter = status;
+    this.updateTasks();
+  }
+
+  onFilterTasksByPriority(priority: Priority | null) {
+    this.priorityFilter = priority;
+    this.updateTasks();
+  }
+
+  updateTasks() {
+    this.dataService.searchTasks(
+      this.selectedCategory,
+      this.searchTaskText,
+      this.statusFilter,
+      this.priorityFilter
+    ).subscribe(
+      tasks =>
+        this.tasks = tasks
+    );
   }
 }
