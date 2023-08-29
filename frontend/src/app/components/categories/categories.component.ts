@@ -32,7 +32,12 @@ export class CategoriesComponent implements OnInit {
   @Output()
   addCategory = new EventEmitter<string | null>();
 
+  @Output()
+  searchCategory = new EventEmitter<string | null>();
+
   indexMouseMove!: number | null;
+
+  searchCategoryTitle!: string;
 
   constructor(private dataService: DataService,
               private dialog: MatDialog
@@ -79,7 +84,7 @@ export class CategoriesComponent implements OnInit {
     )
   }
 
-  public openAddDialog() {
+  openAddDialog() {
     const dialogRef = this.dialog.open(EditCategoryDialogComponent, {
       width: '400px',
       data: ['', 'Add category', OperationType.ADD]
@@ -94,4 +99,11 @@ export class CategoriesComponent implements OnInit {
       }
     )
   }
+  search() {
+    if(this.searchCategoryTitle == null) {
+      return;
+    }
+    this.searchCategory.emit(this.searchCategoryTitle);
+  }
+
 }

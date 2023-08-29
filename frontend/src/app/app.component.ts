@@ -26,6 +26,8 @@ export class AppComponent implements OnInit{
 
   priorities!: Priority[];
 
+  searchCategoryText: string | null = '';
+
   constructor(private dataService: DataService) {
   }
 
@@ -47,40 +49,26 @@ export class AppComponent implements OnInit{
 
   onUpdateTask(task: Task) {
     this.dataService.updateTask(task).subscribe(() => {
-      this.dataService.searchTasks(
-        this.selectedCategory,
-        null,
-        null,
-        null
-      ).subscribe(tasks =>
-        this.tasks = tasks
-      )
+      this.updateTasks();
     })
   }
 
   onDeleteTask(task: Task) {
     this.dataService.deleteTask(task).subscribe(() => {
-      this.dataService.searchTasks(
-        this.selectedCategory,
-        null,
-        null,
-        null
-      ).subscribe(tasks =>
-        this.tasks = tasks
-      )
+      this.updateTasks();
     })
   }
 
   onDeleteCategory(category: Category | null) {
     this.dataService.deleteCategory(<Category> category).subscribe(() => {
       this.selectedCategory = null;
-      this.onSelectCategory(this.selectedCategory);
+      this.onSearchCategory(this.searchCategoryText);
     })
   }
 
   onUpdateCategory(category: Category | null) {
     this.dataService.updateCategory(<Category> category).subscribe(() => {
-      this.onSelectCategory(this.selectedCategory);
+      this.onSearchCategory(this.searchCategoryText);
     })
   }
 
@@ -127,6 +115,13 @@ export class AppComponent implements OnInit{
     this.dataService.getAllCategories().subscribe(
         categories => this.categories = categories
     );
+  }
 
+  onSearchCategory(title: string | null) {
+    this.searchCategoryText = title;
+
+    this.dataService.searchCategories(title).subscribe(
+        categories => this.categories = categories
+    );
   }
 }

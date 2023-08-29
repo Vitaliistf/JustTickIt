@@ -64,7 +64,7 @@ export class TasksComponent implements OnInit {
   deleteTask = new EventEmitter<Task>();
 
   @Output()
-  selectCategory = new EventEmitter<Category>();
+  selectCategory = new EventEmitter<Category | null>();
 
   @Output()
   filterByTitle = new EventEmitter<string>();
@@ -86,7 +86,7 @@ export class TasksComponent implements OnInit {
   ngOnInit(): void {
     // this.dataService.getAllTasks().subscribe(tasks => this.tasks = tasks);
     this.dataSource = new MatTableDataSource();
-    this.fillTable();
+    this.onSelectCategory(null);
   }
 
   toggleTaskCompleted(task: Task) {
@@ -190,7 +190,7 @@ export class TasksComponent implements OnInit {
     this.updateTask.emit(task);
   }
 
-  onSelectCategory(category: Category) {
+  onSelectCategory(category: Category | null) {
     this.selectCategory.emit(category);
   }
 

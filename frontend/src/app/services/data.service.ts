@@ -51,6 +51,13 @@ export class DataService {
         return this.taskDao.search(category, searchText, status, priority);
     }
 
+    searchCategories(searchText: string | null): Observable<Category[]> {
+        if(searchText === null) {
+            searchText = '';
+        }
+        return this.categoryDao.search(searchText);
+    }
+
     updateCategory(category: Category) {
       return this.categoryDao.update(category);
     }
