@@ -48,3 +48,7 @@ span.add-icon-area {
   text-align: center;
   vertical-align: middle;
 }
+
+.sidebar-background {
+  background-image: url("../../../assets/img/sidebar.jpg");
+}
