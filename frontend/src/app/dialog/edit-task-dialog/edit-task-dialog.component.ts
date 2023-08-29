@@ -5,6 +5,7 @@ import {DataService} from "../../services/data.service";
 import {Category} from "../../models/category";
 import {Priority} from "../../models/priority";
 import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
+import {OperationType} from "../operation-type";
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -15,7 +16,7 @@ export class EditTaskDialogComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<EditTaskDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: [Task, string],
+    @Inject(MAT_DIALOG_DATA) private data: [Task, string, OperationType],
     private dataService: DataService,
     private dialog: MatDialog
   ) {
@@ -27,6 +28,7 @@ export class EditTaskDialogComponent implements OnInit {
 
   dialogTitle!: string;
   task!: Task;
+  operationType!: OperationType;
 
   tmpTitle!: string;
   tmpCategory!: Category | undefined;
@@ -36,6 +38,7 @@ export class EditTaskDialogComponent implements OnInit {
   ngOnInit() {
     this.task = this.data[0];
     this.dialogTitle = this.data[1];
+    this.operationType = this.data[2];
 
     this.tmpTitle = this.task.title;
     this.tmpCategory = this.task.category;
@@ -83,4 +86,7 @@ export class EditTaskDialogComponent implements OnInit {
     this.dialogRef.close('complete');
   }
 
+  canDelete(): boolean {
+    return this.operationType === OperationType.EDIT;
+  }
 }

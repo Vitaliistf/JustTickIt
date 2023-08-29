@@ -5,6 +5,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {
   EditCategoryDialogComponent
 } from "../../dialog/edit-category-dialog/edit-category-dialog.component";
+import {OperationType} from "../../dialog/operation-type";
 
 @Component({
   selector: 'app-categories',
@@ -27,6 +28,9 @@ export class CategoriesComponent implements OnInit {
 
   @Output()
   updateCategory = new EventEmitter<Category | null>();
+
+  @Output()
+  addCategory = new EventEmitter<string | null>();
 
   indexMouseMove!: number | null;
 
@@ -54,8 +58,8 @@ export class CategoriesComponent implements OnInit {
 
   openEditDialog(category: Category) {
     const dialogRef = this.dialog.open(EditCategoryDialogComponent, {
-      maxWidth: '400px',
-      data: [category.title, 'Task editing']
+      width: '400px',
+      data: [category.title, 'Category editing', OperationType.EDIT]
     });
     dialogRef.afterClosed().subscribe(result => {
 
@@ -68,6 +72,22 @@ export class CategoriesComponent implements OnInit {
           category.title = result as string;
 
           this.updateCategory.emit(category);
+          return;
+        }
+
+      }
+    )
+  }
+
+  public openAddDialog() {
+    const dialogRef = this.dialog.open(EditCategoryDialogComponent, {
+      width: '400px',
+      data: ['', 'Add category', OperationType.ADD]
+    });
+    dialogRef.afterClosed().subscribe(result => {
+
+        if(result) {
+          this.addCategory.emit(result as string);
           return;
         }
 

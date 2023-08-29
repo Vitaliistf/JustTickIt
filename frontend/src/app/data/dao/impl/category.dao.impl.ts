@@ -6,8 +6,15 @@ import {TestData} from "../../test.data";
 export class CategoryDaoImpl implements CategoryDao {
 
   create(object: Category): Observable<Category> {
-    // @ts-ignore
-    return undefined;
+    if(object.id === 0) {
+      object.id = this.getLastCategoryId() + 1;
+    }
+    TestData.categories.push(object);
+    return of(object);
+  }
+
+  private getLastCategoryId(): number {
+    return Math.max.apply(Math, TestData.categories.map(category => category.id));
   }
 
   delete(id: number): Observable<Category> {

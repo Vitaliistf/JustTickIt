@@ -55,6 +55,10 @@ export class DataService {
       return this.categoryDao.update(category);
     }
 
+    addCategory(title: string) {
+        return this.categoryDao.create(new Category(0, title));
+    }
+
     deleteCategory(category: Category) {
       return this.categoryDao.delete(category.id);
     }

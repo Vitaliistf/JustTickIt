@@ -16,6 +16,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {ConfirmDialogComponent} from "../../dialog/confirm-dialog/confirm-dialog.component";
 import {Category} from "../../models/category";
 import {Priority} from "../../models/priority";
+import {OperationType} from "../../dialog/operation-type";
 
 @Component({
   selector: 'app-tasks',
@@ -139,7 +140,7 @@ export class TasksComponent implements OnInit {
   openEditTaskDialog(task: Task) {
     const dialogRef = this.dialog.open(EditTaskDialogComponent, {
       maxWidth: '600px',
-      data: [task, 'Task editing'],
+      data: [task, 'Task editing', OperationType.EDIT],
       autoFocus: false
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -215,7 +216,7 @@ export class TasksComponent implements OnInit {
     const task = new Task(0, '', false, undefined, this.selectedCategory == null ? undefined : this.selectedCategory);
     const dialogRef = this.dialog.open(EditTaskDialogComponent, {
       maxWidth: '600px',
-      data: [task, 'Task editing'],
+      data: [task, 'Task editing', OperationType.ADD],
       autoFocus: false
     });
     dialogRef.afterClosed().subscribe(result => {

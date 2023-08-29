@@ -116,4 +116,17 @@ export class AppComponent implements OnInit{
       () => this.updateTasks()
     );
   }
+
+  onAddCategory(title: string | null) {
+    this.dataService.addCategory(<string>title).subscribe(
+        () => this.updateCategories()
+    );
+  }
+
+  updateCategories() {
+    this.dataService.getAllCategories().subscribe(
+        categories => this.categories = categories
+    );
+
+  }
 }
