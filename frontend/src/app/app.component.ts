@@ -3,6 +3,7 @@ import { Task } from './models/task';
 import {DataService} from "./services/data.service";
 import {Category} from "./models/category";
 import {Priority} from "./models/priority";
+import {zip} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -28,6 +29,11 @@ export class AppComponent implements OnInit{
 
   searchCategoryText: string | null = '';
 
+  totalTasksCountInCategory!: number;
+  completedCountInCategory!: number;
+  uncompletedCountInCategory!: number;
+  uncompletedTotalTasksCount!: number;
+
   constructor(private dataService: DataService) {
   }
 
@@ -44,18 +50,18 @@ export class AppComponent implements OnInit{
 
   onSelectCategory(category: Category | null) {
     this.selectedCategory = category;
-    this.updateTasks()
+    this.updateTasksAndStats()
   }
 
   onUpdateTask(task: Task) {
     this.dataService.updateTask(task).subscribe(() => {
-      this.updateTasks();
+      this.updateTasksAndStats();
     })
   }
 
   onDeleteTask(task: Task) {
     this.dataService.deleteTask(task).subscribe(() => {
-      this.updateTasks();
+      this.updateTasksAndStats();
     })
   }
 
@@ -101,7 +107,7 @@ export class AppComponent implements OnInit{
 
   onAddTask(task: Task) {
     this.dataService.addTask(task).subscribe(
-      () => this.updateTasks()
+      () => this.updateTasksAndStats()
     );
   }
 
@@ -123,5 +129,24 @@ export class AppComponent implements OnInit{
     this.dataService.searchCategories(title).subscribe(
         categories => this.categories = categories
     );
+  }
+
+  private updateTasksAndStats() {
+    this.updateTasks();
+    this.updateStats();
+  }
+
+  private updateStats() {
+    zip(
+        this.dataService.getTotalCountInCategory(this.selectedCategory),
+        this.dataService.getCompletedCountInCategory(this.selectedCategory),
+        this.dataService.getUncompletedCountInCategory(this.selectedCategory),
+        this.dataService.getUncompletedTotalCount()).subscribe( array => {
+          this.totalTasksCountInCategory = array[0];
+          this.completedCountInCategory = array[1];
+          this.uncompletedCountInCategory = array[2];
+          this.uncompletedTotalTasksCount = array[3];
+        }
+    )
   }
 }

@@ -69,4 +69,20 @@ export class DataService {
     deleteCategory(category: Category) {
       return this.categoryDao.delete(category.id);
     }
+
+    getTotalCountInCategory(category: Category | null) {
+        return this.taskDao.getTotalCountInCategory(category);
+    }
+
+    getCompletedCountInCategory(category: Category | null) {
+        return this.taskDao.getCompletedCountInCategory(category);
+    }
+
+    getUncompletedCountInCategory(category: Category | null) {
+        return this.taskDao.getUncompletedCountInCategory(category);
+    }
+
+    getUncompletedTotalCount() {
+        return this.taskDao.getUncompletedCountInCategory(null);
+    }
 }

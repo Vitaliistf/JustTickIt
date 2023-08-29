@@ -9,11 +9,11 @@ export interface TaskDao extends AbstractDao<Task> {
   search(category: Category | null, searchText: string | null, status: boolean| null, priority: Priority | null):
     Observable<Task[]>;
 
-  getCompletedCountInCategory(category: Category): Observable<number>;
+  getCompletedCountInCategory(category: Category | null): Observable<number>;
 
-  getUnCompletedCountInCategory(category: Category): Observable<number>;
+  getUncompletedCountInCategory(category: Category | null): Observable<number>;
 
-  getTotalCountInCategory(category: Category): Observable<number>;
+  getTotalCountInCategory(category: Category | null): Observable<number>;
 
   getTotalCount(): Observable<number>;
 

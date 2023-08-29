@@ -39,24 +39,20 @@ export class TaskDaoImpl implements TaskDao {
     return of(TestData.tasks);
   }
 
-  getCompletedCountInCategory(category: Category): Observable<number> {
-    // @ts-ignore
-    return undefined;
+  getCompletedCountInCategory(category: Category | null): Observable<number> {
+    return of(this.searchTasks(category, null, true, null).length);
   }
 
   getTotalCount(): Observable<number> {
-    // @ts-ignore
-    return undefined;
+    return of(TestData.length);
   }
 
-  getTotalCountInCategory(category: Category): Observable<number> {
-    // @ts-ignore
-    return undefined;
+  getTotalCountInCategory(category: Category | null): Observable<number> {
+    return of(this.searchTasks(category, null, null, null).length);
   }
 
-  getUnCompletedCountInCategory(category: Category): Observable<number> {
-    // @ts-ignore
-    return undefined;
+  getUncompletedCountInCategory(category: Category | null): Observable<number> {
+    return of(this.searchTasks(category, null, false, null).length);
   }
 
   search(category: Category | null, searchText: string | null, status: boolean| null, priority: Priority | null):

@@ -25,6 +25,7 @@ import { EditCategoryDialogComponent } from './dialog/edit-category-dialog/edit-
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { StatisticsComponent } from './components/statistics/statistics.component';
+import { StatCardComponent } from './components/statistics/stat-card/stat-card.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { StatisticsComponent } from './components/statistics/statistics.componen
     EditCategoryDialogComponent,
     FooterComponent,
     HeaderComponent,
-    StatisticsComponent
+    StatisticsComponent,
+    StatCardComponent
   ],
   imports: [
     BrowserModule,
