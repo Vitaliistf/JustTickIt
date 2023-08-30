@@ -47,3 +47,15 @@
   width: calc(100% - 30px);
   background-color: rgba(180, 180, 180, 0.3);
 }
+
+.gray {
+  color: #8f8f8f
+}
+
+.main-panel > .content {
+  margin-top: 30px !important;
+}
+
+app-header {
+  width: 100%;
+}

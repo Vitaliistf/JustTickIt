@@ -19,4 +19,7 @@ export class StatisticsComponent implements OnInit {
   @Input()
   uncompletedTasksInCategory!: number;
 
+  @Input()
+  showStatistics!: boolean;
+
 }

@@ -12,7 +12,11 @@
 
     <div class="main-panel">
 
-        <app-header></app-header>
+        <app-header
+          [categoryName]="selectedCategory ? selectedCategory.title : 'All'"
+          (toggleStatistics)="toggleStatistics($event)"
+          [showStatistics]="showStatistics">
+        </app-header>
 
         <div class="content">
             <div class="container-fluid">
@@ -20,7 +24,8 @@
                 <app-statistics
                         [totalTasksInCategory]="totalTasksCountInCategory"
                         [completedTasksInCategory]="completedCountInCategory"
-                        [uncompletedTasksInCategory]="uncompletedCountInCategory">
+                        [uncompletedTasksInCategory]="uncompletedCountInCategory"
+                        [showStatistics]="showStatistics">
                 </app-statistics>
 
                 <div class="row">
