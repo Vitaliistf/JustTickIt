@@ -20,6 +20,9 @@ export class CategoriesComponent implements OnInit {
   @Input()
   selectedCategory!: Category | null;
 
+  @Input()
+  categoryMap!: Map<Category, number>;
+
   @Output()
   selectCategory = new EventEmitter<Category | null>();
 

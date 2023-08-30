@@ -1,16 +1,19 @@
 import {Component, OnInit} from '@angular/core';
-import { Task } from './models/task';
+import {Task} from './models/task';
 import {DataService} from "./services/data.service";
 import {Category} from "./models/category";
 import {Priority} from "./models/priority";
-import {zip} from "rxjs";
+import {concatMap, map, zip} from "rxjs";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
+
+  categoryMap = new Map<Category, number>()
+
   title = 'JustTickIt';
 
   tasks!: Task[];
@@ -40,14 +43,32 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.dataService.getAllCategories().subscribe(
-        categories => this.categories = categories
-    );
     this.dataService.getAllPriorities().subscribe(
       priorities => this.priorities = priorities
     );
+    this.dataService.getAllCategories().subscribe(
+      categories => this.categories = categories
+    );
+
+    this.updateCategories();
 
     this.onSelectCategory(null);
+  }
+
+  updateCategories() {
+    if (this.categoryMap) {
+      this.categoryMap.clear();
+    }
+
+    this.categories = this.categories.sort(
+      (a, b) => a.title.localeCompare(b.title)
+    );
+
+    this.categories.forEach(cat => {
+      this.dataService.getUncompletedCountInCategory(cat).subscribe(
+        count => this.categoryMap.set(cat, count)
+      );
+    });
   }
 
   onSelectCategory(category: Category | null) {
@@ -57,25 +78,38 @@ export class AppComponent implements OnInit{
 
   onUpdateTask(task: Task) {
     this.dataService.updateTask(task).subscribe(() => {
+      this.updateCategories();
       this.updateTasksAndStats();
     })
   }
 
   onDeleteTask(task: Task) {
-    this.dataService.deleteTask(task).subscribe(() => {
-      this.updateTasksAndStats();
+    this.dataService.deleteTask(task).pipe(
+      concatMap(t => {
+        return this.dataService.getUncompletedCountInCategory(t.category ? t.category : null)
+          .pipe(map(count => {
+            return ({t: task, count});
+          }));
+      })).subscribe(result => {
+        const t = result.t;
+      if (t.category instanceof Category) {
+        this.categoryMap.set(t.category, result.count);
+        this.updateTasksAndStats();
+      }
     })
   }
 
   onDeleteCategory(category: Category | null) {
-    this.dataService.deleteCategory(<Category> category).subscribe(() => {
+    this.dataService.deleteCategory(<Category>category).subscribe(cat => {
       this.selectedCategory = null;
+      this.categoryMap.delete(cat);
       this.onSearchCategory(this.searchCategoryText);
+      this.updateTasks();
     })
   }
 
   onUpdateCategory(category: Category | null) {
-    this.dataService.updateCategory(<Category> category).subscribe(() => {
+    this.dataService.updateCategory(<Category>category).subscribe(() => {
       this.onSearchCategory(this.searchCategoryText);
     })
   }
@@ -115,13 +149,7 @@ export class AppComponent implements OnInit{
 
   onAddCategory(title: string | null) {
     this.dataService.addCategory(<string>title).subscribe(
-        () => this.updateCategories()
-    );
-  }
-
-  updateCategories() {
-    this.dataService.getAllCategories().subscribe(
-        categories => this.categories = categories
+      () => this.updateCategories()
     );
   }
 
@@ -129,7 +157,7 @@ export class AppComponent implements OnInit{
     this.searchCategoryText = title;
 
     this.dataService.searchCategories(title).subscribe(
-        categories => this.categories = categories
+      categories => this.categories = categories
     );
   }
 
@@ -140,15 +168,15 @@ export class AppComponent implements OnInit{
 
   private updateStats() {
     zip(
-        this.dataService.getTotalCountInCategory(this.selectedCategory),
-        this.dataService.getCompletedCountInCategory(this.selectedCategory),
-        this.dataService.getUncompletedCountInCategory(this.selectedCategory),
-        this.dataService.getUncompletedTotalCount()).subscribe( array => {
-          this.totalTasksCountInCategory = array[0];
-          this.completedCountInCategory = array[1];
-          this.uncompletedCountInCategory = array[2];
-          this.uncompletedTotalTasksCount = array[3];
-        }
+      this.dataService.getTotalCountInCategory(this.selectedCategory),
+      this.dataService.getCompletedCountInCategory(this.selectedCategory),
+      this.dataService.getUncompletedCountInCategory(this.selectedCategory),
+      this.dataService.getUncompletedTotalCount()).subscribe(array => {
+        this.totalTasksCountInCategory = array[0];
+        this.completedCountInCategory = array[1];
+        this.uncompletedCountInCategory = array[2];
+        this.uncompletedTotalTasksCount = array[3];
+      }
     )
   }
 

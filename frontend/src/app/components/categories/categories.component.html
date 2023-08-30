@@ -46,23 +46,24 @@
 
       <div *ngIf="categories.length === 0"><p class="not-found">No categories found</p></div>
 
-      <li (click)="showTasksByCategory(category)"
+      <li (click)="showTasksByCategory(mapValue.key)"
           (mouseenter)="showEditIcon(index)"
           (mouseleave)="showEditIcon(null)"
 
-          *ngFor="let category of categories; let index = index;"
-          [class.active]="category === selectedCategory"
+          *ngFor="let mapValue of categoryMap | keyvalue; let index = index;"
+          [class.active]="mapValue.key === selectedCategory"
 
           class="nav-item pointer">
         <a class="nav-link">
-          <span class="category-title">{{category.title}}</span>
+          <span class="category-title">{{mapValue.key.title}}</span>
           <span class="edit-category-icon-area">
-            <mat-icon (click)="$event.stopPropagation(); openEditDialog(category)"
+            <mat-icon (click)="$event.stopPropagation(); openEditDialog(mapValue.key)"
                       *ngIf="indexMouseMove === index"
                       class="edit-category-icon">
               edit
             </mat-icon>
           </span>
+          <span class="uncompleted-count"> {{mapValue.value}}</span>
         </a>
       </li>
     </ul>
