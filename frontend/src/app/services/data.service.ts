@@ -85,4 +85,16 @@ export class DataService {
     getUncompletedTotalCount() {
         return this.taskDao.getUncompletedCountInCategory(null);
     }
+
+    addPriority(priority: Priority) {
+      return this.priorityDao.create(priority);
+    }
+
+    updatePriority(priority: Priority) {
+      return this.priorityDao.update(priority);
+    }
+
+    deletePriority(priorityId: number) {
+      return this.priorityDao.delete(priorityId);
+    }
 }

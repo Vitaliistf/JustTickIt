@@ -26,6 +26,10 @@ import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { StatisticsComponent } from './components/statistics/statistics.component';
 import { StatCardComponent } from './components/statistics/stat-card/stat-card.component';
+import { PrioritiesComponent } from './components/priorities/priorities.component';
+import {ColorPickerModule} from "ngx-color-picker";
+import { SettingsDialogComponent } from './dialog/settings-dialog/settings-dialog.component';
+import { EditPriorityDialogComponent } from './dialog/edit-priority-dialog/edit-priority-dialog.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +43,10 @@ import { StatCardComponent } from './components/statistics/stat-card/stat-card.c
     FooterComponent,
     HeaderComponent,
     StatisticsComponent,
-    StatCardComponent
+    StatCardComponent,
+    PrioritiesComponent,
+    SettingsDialogComponent,
+    EditPriorityDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -57,7 +64,8 @@ import { StatCardComponent } from './components/statistics/stat-card/stat-card.c
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    ColorPickerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
