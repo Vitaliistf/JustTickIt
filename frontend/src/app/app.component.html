@@ -1,4 +1,4 @@
-<div class="wrapper ">
+<div class="wrapper">
 
     <app-categories (addCategory)="onAddCategory($event)"
                     (deleteCategory)="onDeleteCategory($event)"
@@ -6,6 +6,7 @@
                     (selectCategory)="onSelectCategory($event)"
                     (updateCategory)="onUpdateCategory($event)"
                     [categoryMap]="categoryMap"
+                    [uncompletedTotal]="uncompletedTotalTasksCount"
 
                     [categories]="categories"
                     [selectedCategory]="selectedCategory">

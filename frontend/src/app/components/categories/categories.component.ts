@@ -23,6 +23,9 @@ export class CategoriesComponent implements OnInit {
   @Input()
   categoryMap!: Map<Category, number>;
 
+  @Input()
+  uncompletedTotal!: number;
+
   @Output()
   selectCategory = new EventEmitter<Category | null>();
 

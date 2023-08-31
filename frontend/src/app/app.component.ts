@@ -92,10 +92,10 @@ export class AppComponent implements OnInit {
           }));
       })).subscribe(result => {
         const t = result.t;
-      if (t.category instanceof Category) {
+      if (t.category) {
         this.categoryMap.set(t.category, result.count);
-        this.updateTasksAndStats();
       }
+      this.updateTasksAndStats();
     })
   }
 
@@ -142,9 +142,19 @@ export class AppComponent implements OnInit {
   }
 
   onAddTask(task: Task) {
-    this.dataService.addTask(task).subscribe(
-      () => this.updateTasksAndStats()
-    );
+    this.dataService.addTask(task).pipe(
+      concatMap(t => {
+        return this.dataService.getUncompletedCountInCategory(t.category ? t.category : null)
+          .pipe(map(count => {
+            return ({t: task, count});
+          }));
+      })).subscribe(result => {
+      const t = result.t;
+      if (t.category) {
+        this.categoryMap.set(t.category, result.count);
+      }
+      this.updateTasksAndStats();
+    })
   }
 
   onAddCategory(title: string | null) {

@@ -52,3 +52,13 @@ span.add-icon-area {
 .sidebar-background {
   background-image: url("../../../assets/img/sidebar.jpg");
 }
+
+.uncompleted-count {
+  background-color: #eaeaea;
+  border-radius: 3px;
+  padding: 5px;
+  color: black;
+  width: 15%;
+  display: inline-block;
+  text-align: center;
+}
