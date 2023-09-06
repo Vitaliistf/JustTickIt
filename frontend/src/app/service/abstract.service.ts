@@ -1,6 +1,6 @@
 import {Observable} from "rxjs";
 
-export interface AbstractDao<T> {
+export interface AbstractService<T> {
 
   create(object: T): Observable<T>;
 
@@ -8,7 +8,7 @@ export interface AbstractDao<T> {
 
   delete(id: number): Observable<T>;
 
-  update(object: T): Observable<T>;
+  update(id: number, object: T): Observable<T>;
 
   getAll(): Observable<T[]>;
 

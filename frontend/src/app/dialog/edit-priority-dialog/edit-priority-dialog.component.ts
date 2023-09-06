@@ -33,7 +33,7 @@ export class EditPriorityDialogComponent implements OnInit {
     this.dialogRef.close(false);
   }
 
-  canDelete(): boolean {
+  isDeletable(): boolean {
     return this.operationType == OperationType.EDIT;
   }
 

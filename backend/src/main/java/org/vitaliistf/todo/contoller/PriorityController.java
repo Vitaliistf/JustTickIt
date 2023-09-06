@@ -59,7 +59,7 @@ public class PriorityController {
 
     @PostMapping("/search")
     public List<PriorityResponseDto> search(@RequestBody SimpleSearchObject prioritySearchValues) {
-        return priorityService.findByTitle(prioritySearchValues.getText())
+        return priorityService.findByTitle(prioritySearchValues.getTitle())
                 .stream()
                 .map(priorityMapper::toDto)
                 .toList();

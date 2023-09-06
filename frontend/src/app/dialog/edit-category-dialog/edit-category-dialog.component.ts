@@ -49,7 +49,7 @@ export class EditCategoryDialogComponent implements OnInit{
     })
   }
 
-  canDelete(): boolean {
+  isDeletable(): boolean {
     return this.operationType === OperationType.EDIT;
   }
 

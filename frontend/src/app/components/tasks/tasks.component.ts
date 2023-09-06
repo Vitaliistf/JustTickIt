@@ -1,12 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild
-} from '@angular/core';
-import {DataService} from "../../services/data.service";
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Task} from 'src/app/models/task';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
@@ -79,8 +71,7 @@ export class TasksComponent implements OnInit {
 
   selectedPriorityFilter: Priority | null = null;
 
-  constructor(private dataService: DataService,
-              private dialog: MatDialog) {
+  constructor(private dialog: MatDialog) {
   }
 
   ngOnInit(): void {

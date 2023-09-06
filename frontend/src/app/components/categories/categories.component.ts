@@ -1,11 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {DataService} from "../../services/data.service";
 import {Category} from "../../models/category";
 import {MatDialog} from "@angular/material/dialog";
 import {
-  EditCategoryDialogComponent
+    EditCategoryDialogComponent
 } from "../../dialog/edit-category-dialog/edit-category-dialog.component";
 import {OperationType} from "../../dialog/operation-type";
+import {SimpleSearchValue} from "../../service/search/search-objects";
 
 @Component({
   selector: 'app-categories',
@@ -15,16 +15,16 @@ import {OperationType} from "../../dialog/operation-type";
 export class CategoriesComponent implements OnInit {
 
   @Input()
-  categories!: Category[];
-
-  @Input()
   selectedCategory!: Category | null;
 
   @Input()
-  categoryMap!: Map<Category, number>;
+  categories!: Category[];
 
   @Input()
   uncompletedTotal!: number;
+
+  @Input()
+  categorySearchValue!: SimpleSearchValue | null;
 
   @Output()
   selectCategory = new EventEmitter<Category | null>();
@@ -39,14 +39,13 @@ export class CategoriesComponent implements OnInit {
   addCategory = new EventEmitter<string | null>();
 
   @Output()
-  searchCategory = new EventEmitter<string | null>();
+  searchCategory = new EventEmitter<SimpleSearchValue | null>();
+
+  filterTitle!: string;
 
   indexMouseMove!: number | null;
 
-  searchCategoryTitle!: string;
-
-  constructor(private dataService: DataService,
-              private dialog: MatDialog
+  constructor(private dialog: MatDialog
   ) {
   }
 
@@ -106,10 +105,16 @@ export class CategoriesComponent implements OnInit {
     )
   }
   search() {
-    if(this.searchCategoryTitle == null) {
+    if(!this.categorySearchValue) {
       return;
     }
-    this.searchCategory.emit(this.searchCategoryTitle);
+    this.categorySearchValue.title = this.filterTitle;
+    this.searchCategory.emit(this.categorySearchValue);
+  }
+
+  clearAndSearch() {
+    this.filterTitle = '';
+    this.search();
   }
 
 }

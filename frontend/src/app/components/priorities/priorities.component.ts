@@ -2,11 +2,11 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Priority} from "../../models/priority";
 import {MatDialog} from "@angular/material/dialog";
 import {
-  EditPriorityDialogComponent
+    EditPriorityDialogComponent
 } from "../../dialog/edit-priority-dialog/edit-priority-dialog.component";
 import {OperationType} from "../../dialog/operation-type";
 import {
-  EditCategoryDialogComponent
+    EditCategoryDialogComponent
 } from "../../dialog/edit-category-dialog/edit-category-dialog.component";
 import {ConfirmDialogComponent} from "../../dialog/confirm-dialog/confirm-dialog.component";
 

@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
-import { SettingsDialogComponent } from 'src/app/dialog/settings-dialog/settings-dialog.component';
+import {SettingsDialogComponent} from 'src/app/dialog/settings-dialog/settings-dialog.component';
 
 @Component({
   selector: 'app-header',

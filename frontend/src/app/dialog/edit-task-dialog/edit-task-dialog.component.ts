@@ -1,7 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {Task} from 'src/app/models/task';
-import {DataService} from "../../services/data.service";
 import {Category} from "../../models/category";
 import {Priority} from "../../models/priority";
 import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
@@ -17,7 +16,6 @@ export class EditTaskDialogComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<EditTaskDialogComponent>,
     @Inject(MAT_DIALOG_DATA) private data: [Task, string, OperationType],
-    private dataService: DataService,
     private dialog: MatDialog
   ) {
 
@@ -45,8 +43,8 @@ export class EditTaskDialogComponent implements OnInit {
     this.tmpPriority = this.task.priority;
     this.tmpDate = this.task.date;
 
-    this.dataService.getAllCategories().subscribe(items => this.categories = items);
-    this.dataService.getAllPriorities().subscribe(items => this.priorities = items);
+    // this.dataService.getAllCategories().subscribe(items => this.categories = items);
+    // this.dataService.getAllPriorities().subscribe(items => this.priorities = items);
   }
 
   onConfirm() {

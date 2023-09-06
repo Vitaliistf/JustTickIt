@@ -3,6 +3,7 @@ package org.vitaliistf.todo.contoller;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import org.vitaliistf.todo.service.CategoryService;
 @RestController
 @RequestMapping("/category")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -60,7 +62,7 @@ public class CategoryController {
 
     @PostMapping("/search")
     public List<CategoryResponseDto> search(@RequestBody SimpleSearchObject categorySearchValues) {
-        List<Category> categories = categoryService.findByTitle(categorySearchValues.getText());
+        List<Category> categories = categoryService.findByTitle(categorySearchValues.getTitle());
         return categories
                 .stream()
                 .map(categoryMapper::toDto)
