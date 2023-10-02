@@ -36,11 +36,6 @@ span.add-icon-area {
   text-align: left;
 }
 
-#categories {
-  width: 100%;
-  overflow-x: hidden;
-}
-
 .nav-title {
   width: 80%;
   display: inline-block;
@@ -62,3 +57,24 @@ span.add-icon-area {
   display: inline-block;
   text-align: center;
 }
+
+.search-category-area {
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: #f2f2f2;
+  border-radius: 6px
+}
+
+.search-category-button {
+  margin-left: 10px;
+  font-size: 25px
+}
+
+.title, .category {
+  cursor: pointer;
+}
+
+.sidebar a {
+  font-size: 16px !important;
+}
+

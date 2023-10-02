@@ -4,7 +4,7 @@ import {Task} from 'src/app/models/task';
 import {Category} from "../../models/category";
 import {Priority} from "../../models/priority";
 import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
-import {OperationType} from "../operation-type";
+import {DialogAction, DialogResult} from "../dialog-result";
 
 @Component({
   selector: 'app-edit-task-dialog',
@@ -15,10 +15,9 @@ export class EditTaskDialogComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<EditTaskDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: [Task, string, OperationType],
-    private dialog: MatDialog
+    @Inject(MAT_DIALOG_DATA) private data: [Task, string, Category[], Priority[]],
+    private dialog: MatDialog,
   ) {
-
   }
 
   categories!: Category[];
@@ -26,65 +25,112 @@ export class EditTaskDialogComponent implements OnInit {
 
   dialogTitle!: string;
   task!: Task;
-  operationType!: OperationType;
 
-  tmpTitle!: string;
-  tmpCategory!: Category | undefined;
-  tmpPriority!: Priority | undefined;
-  tmpDate!: Date | undefined;
+  newTitle!: string;
+  newPriorityId!: number;
+  newCategoryId!: number;
+  newDate!: Date | null;
+
+  oldCategoryId!: number;
+
+  canDelete = false;
+  canComplete = false;
+
+  today = new Date();
+
 
   ngOnInit() {
     this.task = this.data[0];
     this.dialogTitle = this.data[1];
-    this.operationType = this.data[2];
+    this.categories = this.data[2];
+    this.priorities = this.data[3];
 
-    this.tmpTitle = this.task.title;
-    this.tmpCategory = this.task.category;
-    this.tmpPriority = this.task.priority;
-    this.tmpDate = this.task.date;
+    if (this.task && this.task.id > 0) {
+      this.canDelete = true;
+      this.canComplete = true;
+    }
 
-    // this.dataService.getAllCategories().subscribe(items => this.categories = items);
-    // this.dataService.getAllPriorities().subscribe(items => this.priorities = items);
+    this.newTitle = this.task.title;
+
+    if (this.task.priority) {
+      this.newPriorityId = this.task.priority.id;
+    }
+
+    if (this.task.category) {
+      this.newCategoryId = this.task.category.id;
+      this.oldCategoryId = this.task.category.id;
+    }
+
+    if (this.task.date) {
+      this.newDate = new Date(this.task.date);
+    }
   }
 
-  onConfirm() {
-    this.task.title = this.tmpTitle;
-    this.task.category = this.tmpCategory;
-    this.task.priority = this.tmpPriority;
-    this.task.date = this.tmpDate;
+  confirm(): void {
+    this.task.title = this.newTitle;
+    this.task.priority = this.findPriorityById(this.newPriorityId);
+    this.task.category = this.findCategoryById(this.newCategoryId);
+    this.task.oldCategory = this.findCategoryById(this.oldCategoryId);
 
-    this.dialogRef.close(this.task);
+    if (!this.newDate) {
+      this.task.date = undefined;
+    } else {
+      this.task.date = this.newDate;
+    }
+
+    this.dialogRef.close(new DialogResult(DialogAction.SAVE, this.task));
   }
-  onCancel() {
-    this.dialogRef.close(null);
+
+  cancel(): void {
+    this.dialogRef.close(new DialogResult(DialogAction.CANCEL));
   }
 
   delete() {
+
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: '500px',
       data: {
         dialogTitle: 'Confirm action',
-        message: `Do you confirm deletion of task: "${this.task.title}"?`
+        message: `Confirm deletion of: "${this.task.title}"?`
       },
       autoFocus: false
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result) {
-        this.dialogRef.close('delete');
-      }
-    })
-  }
 
-  activate() {
-    this.dialogRef.close('activate');
+      if (!(result)) {
+        return;
+      }
+
+      if (result.action === DialogAction.OK) {
+        this.dialogRef.close(new DialogResult(DialogAction.DELETE));
+      }
+    });
   }
 
   complete() {
-    this.dialogRef.close('complete');
+    this.dialogRef.close(new DialogResult(DialogAction.COMPLETE));
+
   }
 
-  canDelete(): boolean {
-    return this.operationType === OperationType.EDIT;
+  activate() {
+    this.dialogRef.close(new DialogResult(DialogAction.ACTIVATE));
+  }
+
+  private findPriorityById(tmpPriorityId: number): Priority {
+    return <Priority>this.priorities.find(t => t.id === tmpPriorityId);
+  }
+
+  private findCategoryById(tmpCategoryId: number): Category {
+    return <Category>this.categories.find(t => t.id === tmpCategoryId);
+  }
+
+  addDays(days: number) {
+    this.newDate = new Date();
+    this.newDate.setDate(this.today.getDate() + days);
+  }
+
+  setToday() {
+    this.newDate = this.today;
   }
 }

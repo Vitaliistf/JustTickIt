@@ -2,10 +2,15 @@ import {Component, OnInit} from '@angular/core';
 import {Task} from './models/task';
 import {Category} from "./models/category";
 import {Priority} from "./models/priority";
-import {concatMap, map, zip} from "rxjs";
-import {CategoryService} from "./service/category.service";
+import {Observable} from "rxjs";
+import {SimpleSearchValue, TaskSearchValues} from "./service/search/search-objects";
+import {Statistics} from "./models/statistics";
+import {DashboardData} from "./dialog/dashboard-data";
+import {PageEvent} from "@angular/material/paginator";
+import {TaskServiceImpl} from "./service/impl/task.service";
 import {CategoryServiceImpl} from "./service/impl/category.service";
-import {SimpleSearchValue} from "./service/search/search-objects";
+import {PriorityServiceImpl} from "./service/impl/priority.service";
+import {StatisticsServiceImpl} from "./service/impl/statistics.service";
 
 @Component({
   selector: 'app-root',
@@ -14,185 +19,235 @@ import {SimpleSearchValue} from "./service/search/search-objects";
 })
 export class AppComponent implements OnInit {
 
-  title = 'JustTickIt';
-
-  tasks!: Task[];
-
-  categories!: Category[];
-
   selectedCategory: Category | null = null;
-
-  statusFilter!: boolean | null;
-
-  searchTaskText = '';
-
-  priorityFilter!: Priority | null;
-
-  priorities!: Priority[];
-
-  categorySearchValue: SimpleSearchValue = new SimpleSearchValue();
-
-  totalTasksCountInCategory!: number;
-  completedCountInCategory!: number;
-  uncompletedCountInCategory!: number;
-  uncompletedTotalTasksCount!: number;
-
   showStatistics = true;
+  showSearch = true;
+  tasks!: Task[];
+  priorities!: Priority[];
+  categories!: Category[];
+  stat!: Statistics;
+  dash: DashboardData = new DashboardData();
+  uncompletedCountForCategoryAll!: number;
+  totalTasksFound!: number;
+  taskSearchValues = new TaskSearchValues();
+  categorySearchValue = new SimpleSearchValue();
+  menuOpened = true;
 
-  constructor(private categoryService: CategoryServiceImpl) {
+  constructor(
+    private taskService: TaskServiceImpl,
+    private categoryService: CategoryServiceImpl,
+    private priorityService: PriorityServiceImpl,
+    private statService: StatisticsServiceImpl
+  ) {
+    this.statService.getStatistics().subscribe((result => {
+      this.stat = result;
+      this.uncompletedCountForCategoryAll = this.stat.uncompletedTotal;
+
+      this.fillAllCategories().subscribe(res => {
+        this.categories = res;
+
+        this.selectCategory(this.selectedCategory);
+      });
+    }));
   }
 
-  ngOnInit() {
-    // this.dataService.getAllPriorities().subscribe(
-    //   priorities => this.priorities = priorities
-    // );
-    // this.dataService.getAllCategories().subscribe(
-    //   categories => this.categories = categories
-    // );
 
-    this.updateCategories();
-
-    this.onSelectCategory(null);
+  ngOnInit(): void {
+    this.fillAllPriorities();
   }
 
-  updateCategories() {
+  fillAllPriorities() {
+    this.priorityService.getAll().subscribe(result => {
+      this.priorities = result;
+    });
+  }
 
-    this.categoryService.getAll().subscribe(result => {
+  fillAllCategories(): Observable<Category[]> {
+    return this.categoryService.getAll();
+  }
+
+    fillDashData(completedCount: number | undefined, uncompletedCount: number | undefined) {
+    this.dash.completedTotal = completedCount;
+    this.dash.uncompletedTotal = uncompletedCount;
+  }
+
+  selectCategory(category: Category | null) {
+
+    if (category) {
+      this.fillDashData(category.completedCount, category.uncompletedCount);
+    } else {
+      this.fillDashData(this.stat.completedTotal, this.stat.uncompletedTotal);
+    }
+
+    this.taskSearchValues.pageNumber = 0;
+
+    this.selectedCategory = category;
+
+    this.taskSearchValues.categoryId = category ? category.id : null;
+
+    this.searchTasks(this.taskSearchValues);
+  }
+
+  addCategory(category: Category | null) {
+    if (category != null) {
+        this.categoryService.create(category).subscribe(() => {
+                this.searchCategory(this.categorySearchValue);
+            }
+        );
+    }
+  }
+
+  deleteCategory(category: Category | null) {
+    if (category != null) {
+        this.categoryService.delete(category.id).subscribe(() => {
+            this.selectedCategory = null;
+
+            this.searchCategory(this.categorySearchValue);
+            this.selectCategory(this.selectedCategory);
+
+        });
+    }
+  }
+
+  updateCategory(category: Category | null) {
+    if (category != null) {
+      this.categoryService.update(category.id, category).subscribe(() => {
+        this.searchCategory(this.categorySearchValue);
+        this.searchTasks(this.taskSearchValues);
+      });
+    }
+  }
+
+  toggleMenu() {
+    this.menuOpened = !this.menuOpened;
+  }
+
+  onClosedMenu() {
+    this.menuOpened = false;
+  }
+
+    searchCategory(categorySearchValues: SimpleSearchValue | null) {
+    this.categoryService.find(categorySearchValues).subscribe(result => {
       this.categories = result;
     });
-    // if (this.categoryMap) {
-    //   this.categoryMap.clear();
-    // }
-    //
-    // this.categories = this.categories.sort(
-    //   (a, b) => a.title.localeCompare(b.title)
-    // );
-
-    // this.categories.forEach(cat => {
-    //   this.dataService.getUncompletedCountInCategory(cat).subscribe(
-    //     count => this.categoryMap.set(cat, count)
-    //   );
-    // });
   }
 
-  onSelectCategory(category: Category | null) {
-    this.selectedCategory = category;
-    this.updateTasksAndStats()
+  toggleStat(showStat: boolean) {
+    this.showStatistics = showStat;
   }
 
-  onUpdateTask(task: Task) {
-    // this.dataService.updateTask(task).subscribe(() => {
-    //   this.updateCategories();
-    //   this.updateTasksAndStats();
-    // })
+  toggleSearch(showSearch: boolean) {
+    this.showSearch = showSearch;
   }
 
-  onDeleteTask(task: Task) {
-    // this.dataService.deleteTask(task).pipe(
-    //   concatMap(t => {
-    //     return this.dataService.getUncompletedCountInCategory(t.category ? t.category : null)
-    //       .pipe(map(count => {
-    //         return ({t: task, count});
-    //       }));
-    //   })).subscribe(result => {
-    //     const t = result.t;
-    //   if (t.category) {
-    //     this.categoryMap.set(t.category, result.count);
-    //   }
-    //   this.updateTasksAndStats();
-    // })
+  searchTasks(searchTaskValues: TaskSearchValues) {
+
+    this.taskSearchValues = searchTaskValues;
+
+    this.taskService.find(this.taskSearchValues).subscribe(result => {
+      if (result.totalPages > 0 && this.taskSearchValues.pageNumber >= result.totalPages) {
+        this.taskSearchValues.pageNumber = 0;
+        this.searchTasks(this.taskSearchValues);
+      }
+
+      this.totalTasksFound = result.totalElements;
+      this.tasks = result.content;
+    });
   }
 
-  onDeleteCategory(category: Category | null) {
-    // this.dataService.deleteCategory(<Category>category).subscribe(cat => {
-    //   this.selectedCategory = null;
-    //   this.categoryMap.delete(cat);
-    //   this.onSearchCategory(this.searchCategoryText);
-    //   this.updateTasks();
-    // })
+  updateOverallCounter() {
+
+    this.statService.getStatistics().subscribe((res => {
+      this.stat = res;
+      this.uncompletedCountForCategoryAll = this.stat.uncompletedTotal;
+
+      if (!this.selectedCategory) {
+        this.fillDashData(this.stat.completedTotal, this.stat.uncompletedTotal);
+      }
+
+    }));
+
   }
 
-  onUpdateCategory(category: Category | null) {
-    // this.dataService.updateCategory(<Category>category).subscribe(() => {
-    //   this.onSearchCategory(this.searchCategoryText);
-    // })
+  updateCategoryCounter(category: Category) {
+    this.categoryService.get(category.id).subscribe(cat => {
+
+      this.categories[this.getCategoryIndex(category)] = cat;
+
+      this.showCategoryDashboard(cat);
+    });
   }
 
-  onSearchTasks(searchString: string) {
-    this.searchTaskText = searchString;
-    this.updateTasks();
+  showCategoryDashboard(cat: Category) {
+    if (this.selectedCategory && this.selectedCategory.id === cat.id) {
+      this.fillDashData(cat.completedCount, cat.uncompletedCount);
+    }
   }
 
-  onFilterTasksByStatus(status: null | boolean) {
-    this.statusFilter = status;
-    this.updateTasks();
+  addTask(task: Task) {
+    this.taskService.create(task).subscribe(() => {
+
+      if (task.category) {
+        this.updateCategoryCounter(task.category);
+      }
+
+      this.updateOverallCounter();
+
+      this.searchTasks(this.taskSearchValues);
+    });
   }
 
-  onFilterTasksByPriority(priority: Priority | null) {
-    this.priorityFilter = priority;
-    this.updateTasks();
+  deleteTask(task: Task) {
+    this.taskService.delete(task.id).subscribe(() => {
+
+      if (task.category) {
+        this.updateCategoryCounter(task.category);
+      }
+
+      this.updateOverallCounter();
+
+      this.searchTasks(this.taskSearchValues);
+
+    });
   }
 
-  updateTasks() {
-    // this.dataService.searchTasks(
-    //   this.selectedCategory,
-    //   this.searchTaskText,
-    //   this.statusFilter,
-    //   this.priorityFilter
-    // ).subscribe(
-    //   tasks =>
-    //     this.tasks = tasks
-    // );
+  updateTask(task: Task) {
+    this.taskService.update(task.id, task).subscribe(() => {
+
+      if (task.oldCategory) {
+        this.updateCategoryCounter(task.oldCategory);
+      }
+
+      if (task.category) {
+        this.updateCategoryCounter(task.category);
+      }
+
+      this.updateOverallCounter();
+
+      this.searchTasks(this.taskSearchValues);
+    });
   }
 
-  onAddTask(task: Task) {
-    // this.dataService.addTask(task).pipe(
-    //   concatMap(t => {
-    //     return this.dataService.getUncompletedCountInCategory(t.category ? t.category : null)
-    //       .pipe(map(count => {
-    //         return ({t: task, count});
-    //       }));
-    //   })).subscribe(result => {
-    //   const t = result.t;
-    //   if (t.category) {
-    //     this.categoryMap.set(t.category, result.count);
-    //   }
-    //   this.updateTasksAndStats();
-    // })
+  paging(pageEvent: PageEvent) {
+    if (this.taskSearchValues.pageSize !== pageEvent.pageSize) {
+      this.taskSearchValues.pageNumber = 0;
+    } else {
+      this.taskSearchValues.pageNumber = pageEvent.pageIndex;
+    }
+
+    this.taskSearchValues.pageSize = pageEvent.pageSize;
+    this.taskSearchValues.pageNumber = pageEvent.pageIndex;
+
+    this.searchTasks(this.taskSearchValues);
   }
 
-  onAddCategory(title: string | null) {
-    // this.dataService.addCategory(<string>title).subscribe(
-    //   () => this.updateCategories()
-    // );
+  settingsChanged(priorities: Priority[]) {
+    this.priorities = priorities;
+    this.searchTasks(this.taskSearchValues);
   }
 
-  onSearchCategory(categorySearchValue: SimpleSearchValue | null) {
-    this.categoryService.find(categorySearchValue).subscribe(
-      categories => this.categories = categories
-    );
-  }
-
-  private updateTasksAndStats() {
-    this.updateTasks();
-    this.updateStats();
-  }
-
-  private updateStats() {
-    // zip(
-    //   this.dataService.getTotalCountInCategory(this.selectedCategory),
-    //   this.dataService.getCompletedCountInCategory(this.selectedCategory),
-    //   this.dataService.getUncompletedCountInCategory(this.selectedCategory),
-    //   this.dataService.getUncompletedTotalCount()).subscribe(array => {
-    //     this.totalTasksCountInCategory = array[0];
-    //     this.completedCountInCategory = array[1];
-    //     this.uncompletedCountInCategory = array[2];
-    //     this.uncompletedTotalTasksCount = array[3];
-    //   }
-    // )
-  }
-
-  toggleStatistics(showStatistics: boolean) {
-    this.showStatistics = showStatistics;
+  getCategoryIndex(category: Category): number {
+    const tmpCategory = this.categories.find(t => t.id === category.id);
+    return this.categories.indexOf(<Category>tmpCategory);
   }
 }

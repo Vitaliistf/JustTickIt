@@ -1,9 +1,8 @@
 .card-title {
-    font-size: 35px;
+  font-size: 35px
 }
 
-stat-card-title {
-    margin-bottom: 0;
-    font-size: 16px;
+.stat-card-title {
+  margin-bottom: 0;
+  font-size: 16px;
 }
-

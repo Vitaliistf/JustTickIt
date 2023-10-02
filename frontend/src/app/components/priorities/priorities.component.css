@@ -1,21 +1,7 @@
-.priority-title {
-  vertical-align: middle;
-  width: 150px;
-  float: left;
-}
-
 .priority-color {
   vertical-align: middle;
   width: 40px;
-  float: left;
-}
-
-.color-circle {
-  height: 25px;
-  width: 25px;
-  border-radius: 50%;
-  display: inline-block;
-  border: 1px solid #dadada;
+  float: left
 }
 
 .priorities p {

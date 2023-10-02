@@ -3,6 +3,7 @@ package org.vitaliistf.todo.contoller;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import org.vitaliistf.todo.service.PriorityService;
 @RestController
 @RequestMapping("/priority")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class PriorityController {
 
     private final PriorityService priorityService;

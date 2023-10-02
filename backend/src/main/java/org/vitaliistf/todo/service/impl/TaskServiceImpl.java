@@ -33,7 +33,7 @@ public class TaskServiceImpl implements TaskService {
         taskFromDb.setPriority(task.getPriority());
         taskFromDb.setCompleted(task.getCompleted());
 
-        return taskRepository.save(task);
+        return taskRepository.save(taskFromDb);
     }
 
     public void deleteById(Long id) {

@@ -1,39 +1,57 @@
 <mat-dialog-content>
   <p mat-dialog-title>{{dialogTitle}}</p>
 
+
   <mat-form-field>
-    <mat-label>Name (max. 20 symbols)</mat-label>
+    <mat-label>Title(up to 20 symbols)</mat-label>
     <input
       #inputTitle
       matInput maxlength="20"
+      [(ngModel)]="priority.title"
+      (keydown.enter)="confirm()"
 
-      [(ngModel)]="priorityTitle"
-      (keydown.enter)="onConfirm()">
+    />
+
+
     <button
-      *ngIf="priorityTitle.trim().length > 0"
+      *ngIf="priority && priority.title.trim().length > 0"
+
       class="clear-icon"
-      mat-icon-button aria-label="Clear"
-      (click)="priorityTitle = ''">
+      matSuffix mat-icon-button aria-label="Clear"
+
+      (click)="priority.title = ''"
+    >
+
+
       <mat-icon>clear</mat-icon>
     </button>
   </mat-form-field>
+
+  <span [(colorPicker)]="priority.color" [style.background]="priority.color" class="color-circle"></span>
+
 </mat-dialog-content>
+
 
 <mat-dialog-actions>
   <div class="col-12 text-center">
     <button
       mat-raised-button color="primary"
-      (click)="onConfirm()"
-      [disabled]="inputTitle.value.trim().length == 0">
+      (click)="confirm()"
+      [disabled]="inputTitle.value.trim().length==0"
+    >
       Save
     </button>
+
+    <button mat-raised-button (click)="cancel()">Cancel</button>
+
   </div>
 
   <div class="col-12 text-center">
-    <button
-      class="red" mat-button
-      *ngIf="isDeletable()"
-      (click)="delete()">
+
+    <button class="red"
+            mat-button
+            *ngIf="canDelete" (click)="delete()"
+    >
       Delete
     </button>
   </div>

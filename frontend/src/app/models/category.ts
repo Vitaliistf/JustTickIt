@@ -8,7 +8,9 @@ export class Category {
   constructor(id: number, title: string, completedCount?: number, uncompletedCount?: number) {
     this.id = id;
     this.title = title;
-    this.completedCount = completedCount;
-    this.uncompletedCount = uncompletedCount;
+
+    this.completedCount = completedCount ? completedCount : 0;
+
+    this.uncompletedCount = uncompletedCount ? uncompletedCount : 0;
   }
 }

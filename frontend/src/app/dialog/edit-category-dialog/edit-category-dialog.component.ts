@@ -1,56 +1,63 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
-import {OperationType} from "../operation-type";
+import {Category} from "../../models/category";
+import {DialogAction, DialogResult} from "../dialog-result";
 
 @Component({
   selector: 'app-edit-category-dialog',
   templateUrl: './edit-category-dialog.component.html',
   styleUrls: ['./edit-category-dialog.component.css']
 })
-export class EditCategoryDialogComponent implements OnInit{
+export class EditCategoryDialogComponent implements OnInit {
 
-  constructor(private dialogRef: MatDialogRef<EditCategoryDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) private data: [string, string, OperationType],
-              private dialog: MatDialog) {
+  constructor(
+    private dialogRef: MatDialogRef<EditCategoryDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: [Category, string],
+    private dialog: MatDialog
+  ) {
   }
 
   dialogTitle!: string;
-  categoryTitle!: string;
-  operationType!: OperationType;
+  category!: Category;
+  canDelete = false;
 
-  ngOnInit(): void {
-    this.categoryTitle = this.data[0];
+  ngOnInit() {
+    this.category = this.data[0];
     this.dialogTitle = this.data[1];
-    this.operationType = this.data[2];
+
+    if (this.category && this.category.id && this.category.id > 0) {
+      this.canDelete = true;
+    }
   }
 
-  onConfirm() {
-    this.dialogRef.close(this.categoryTitle);
+  confirm(): void {
+    this.dialogRef.close(new DialogResult(DialogAction.SAVE, this.category));
   }
 
-  onCancel() {
-    this.dialogRef.close(false);
+  cancel(): void {
+    this.dialogRef.close(new DialogResult(DialogAction.CANCEL));
   }
 
-  delete() {
+  delete(): void {
+
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: '500px',
       data: {
         dialogTitle: 'Confirm action',
-        message: `Do you confirm deletion of task: "${this.categoryTitle}"?(Tasks will be not deleted)`
+        message: `Confirm deletion of category: "${this.category.title}"? (Tasks will be saved)`
       },
       autoFocus: false
     });
+
     dialogRef.afterClosed().subscribe(result => {
-      if(result) {
-        this.dialogRef.close('delete');
+      if (!(result)) {
+        return;
       }
-    })
-  }
 
-  isDeletable(): boolean {
-    return this.operationType === OperationType.EDIT;
+      if (result.action === DialogAction.OK) {
+        this.dialogRef.close(new DialogResult(DialogAction.DELETE));
+      }
+    });
   }
-
 }

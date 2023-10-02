@@ -2,13 +2,10 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Priority} from "../../models/priority";
 import {MatDialog} from "@angular/material/dialog";
 import {
-    EditPriorityDialogComponent
+  EditPriorityDialogComponent
 } from "../../dialog/edit-priority-dialog/edit-priority-dialog.component";
-import {OperationType} from "../../dialog/operation-type";
-import {
-    EditCategoryDialogComponent
-} from "../../dialog/edit-category-dialog/edit-category-dialog.component";
 import {ConfirmDialogComponent} from "../../dialog/confirm-dialog/confirm-dialog.component";
+import {DialogAction} from "../../dialog/dialog-result";
 
 @Component({
   selector: 'app-priorities',
@@ -17,7 +14,7 @@ import {ConfirmDialogComponent} from "../../dialog/confirm-dialog/confirm-dialog
 })
 export class PrioritiesComponent implements OnInit {
 
-  static defaultColor = '#fff';
+  static defaultColor = '#fcfcfc';
 
   @Input()
   priorities!: Priority[];
@@ -34,63 +31,79 @@ export class PrioritiesComponent implements OnInit {
   constructor(private dialog: MatDialog) {
   }
 
-  onAddPriority() {
-    const dialogRef = this.dialog.open(EditCategoryDialogComponent,
+  ngOnInit() {
+  }
+
+  openAddDialog() {
+
+    const dialogRef = this.dialog.open(EditPriorityDialogComponent,
       {
-        data: ['', 'Add priority', OperationType.ADD]
-      }
-    );
+        data:
+          [new Priority(0, '', PrioritiesComponent.defaultColor),
+            'Add priority'], width: '400px'
+      });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        const newPriority = new Priority(0, result as string, PrioritiesComponent.defaultColor);
+
+      if (!(result)) {
+        return;
+      }
+
+      if (result.action === DialogAction.SAVE) {
+        const newPriority = result.obj as Priority;
         this.addPriority.emit(newPriority);
       }
     });
+
+
   }
 
-  onEditPriority(priority: Priority) {
-    const dialogRef = this.dialog.open(EditPriorityDialogComponent,
-      {
-        data: [priority.title, 'Edit priority', OperationType.EDIT],
-        width: '400px'
-      }
-    );
+  openEditDialog(priority: Priority) {
+
+    const dialogRef = this.dialog.open(EditPriorityDialogComponent, {
+      data: [new Priority(priority.id, priority.title, priority.color), 'Edit priority']
+    });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result === 'delete') {
+
+
+      if (!(result)) {
+        return;
+      }
+
+      if (result.action === DialogAction.DELETE) {
         this.deletePriority.emit(priority);
         return;
       }
 
-      if (result) {
-        priority.title = result as string;
+      if (result.action === DialogAction.SAVE) {
+        priority = result.obj as Priority;
         this.updatePriority.emit(priority);
         return;
       }
     });
+
+
   }
 
-  delete(priority: Priority) {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent,
-      {
-        maxWidth: '500px',
-        data: {
-          dialogTitle: 'Confirm action',
-          message: `Do you confirm deletion of "${priority.title}" priority?`
-        },
-        autoFocus: false
-      }
-    );
+  openDeleteDialog(priority: Priority) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: '500px',
+      data: {
+        dialogTitle: 'Confirm action',
+        message: `Confirm deletion of priority: "${priority.title}"? (Tasks will be filled with no priority.)`
+      },
+      autoFocus: false
+    });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      if (!result) {
+        return;
+      }
+
+      if (result.action === DialogAction.OK) {
         this.deletePriority.emit(priority);
       }
     });
   }
-
-  ngOnInit(): void {
-  }
-
 }

@@ -17,6 +17,7 @@
         <mat-form-field class="full-width">
           <input
             (keydown.escape)="clearAndSearch()"
+            (ngModelChange)="this.checkFilterChanged()"
             [(ngModel)]="filterTitle"
 
             matInput
@@ -42,7 +43,7 @@
         </mat-form-field>
       </div>
 
-      <li (click)="showTasksByCategory(null)" [class.active]="selectedCategory === null"
+      <li (click)="showCategory(null)" [class.active]="selectedCategory === null"
           class="nav-item category">
         <a class="nav-link pointer">
           <span class="all-category-title">All tasks</span>
@@ -52,9 +53,9 @@
 
       <div *ngIf="categories && categories.length === 0"><p class="not-found">No categories found</p></div>
 
-      <li (click)="showTasksByCategory(category)"
-          (mouseenter)="showEditIcon(index)"
-          (mouseleave)="showEditIcon(null)"
+      <li (click)="showCategory(category)"
+          (mouseenter)="showEditIcon(true, index)"
+          (mouseleave)="showEditIcon(false, -1)"
 
           *ngFor="let category of categories; let index = index;"
           [class.active]="category === selectedCategory"

@@ -1,29 +1,29 @@
-<div *ngIf="showStatistics">
+<div *ngIf="showStat">
     <div class="row">
         <app-stat-card class="col-lg-3 col-md-6 col-sm-6"
                        title="Completed tasks"
                        iconName="done"
-                       [count]="completedTasksInCategory"
-                       [countTotal]="totalTasksInCategory"
+                       [count]="getCompletedCount()"
+                       [countTotal]="getTotal()"
         ></app-stat-card>
 
         <app-stat-card class="col-lg-3 col-md-6 col-sm-6"
                        title="Uncompleted tasks"
                        iconName="thumb_down_alt"
-                       [count]="uncompletedTasksInCategory"
-                       [countTotal]="totalTasksInCategory"
+                       [count]="getUncompletedCount()"
+                       [countTotal]="getTotal()"
         ></app-stat-card>
 
         <app-stat-card class="col-lg-3 col-md-6 col-sm-6"
                        title="Percent of completed tasks"
                        iconName="poll"
-                       [count]="completedTasksInCategory ? (completedTasksInCategory/totalTasksInCategory | percent) : '0 %'"
+                       [count]="getCompletedPercent() | percent"
         ></app-stat-card>
 
         <app-stat-card class="col-lg-3 col-md-6 col-sm-6"
                        title="Percent of uncompleted tasks"
                        iconName="poll"
-                       [count]="uncompletedTasksInCategory ? (uncompletedTasksInCategory/totalTasksInCategory | percent) : '0 %'"
+                       [count]="getUncompletedPercent() | percent"
         ></app-stat-card>
     </div>
 </div>

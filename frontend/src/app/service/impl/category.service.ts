@@ -5,7 +5,6 @@ import {HttpClient} from "@angular/common/http";
 import {CommonService} from "./common.service";
 import {Category} from "../../models/category";
 import {CategoryService} from "../category.service";
-import {Task} from "../../models/task";
 
 export const CATEGORY_URL_TOKEN = new InjectionToken<string>('url');
 

@@ -26,7 +26,7 @@ public class Task {
 
     @Basic
     @Column(name = "completed")
-    private Integer completed;
+    private Boolean completed;
 
     @Basic
     @Column(name = "date")

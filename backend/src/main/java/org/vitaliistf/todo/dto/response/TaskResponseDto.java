@@ -9,7 +9,7 @@ import org.vitaliistf.todo.models.Priority;
 public class TaskResponseDto {
     private Long id;
     private String title;
-    private Integer completed;
+    private Boolean completed;
     private LocalDateTime date;
     private Priority priority;
     private Category category;

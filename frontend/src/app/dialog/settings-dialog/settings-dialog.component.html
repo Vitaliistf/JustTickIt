@@ -2,12 +2,14 @@
   <p mat-dialog-title class="settings-title with-subtitle">Priority settings</p>
   <app-priorities
     [priorities]="priorities"
-    (addPriority)="onAddPriority($event)"
-    (deletePriority)="onDeletePriority($event)"
-    (updatePriority)="onUpdatePriority($event)"
+    (addPriority)="addPriority($event)"
+    (deletePriority)="deletePriority($event)"
+    (updatePriority)="updatePriority($event)"
   ></app-priorities>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-raised-button color="primary" (click)="onClose()">Close</button>
+  <button mat-raised-button color="primary" (click)="close()">Close</button>
 </mat-dialog-actions>
+
+

@@ -10,7 +10,7 @@ import org.vitaliistf.todo.models.Priority;
 public class TaskRequestDto {
     @NotBlank(message = "Title cannot be blank.")
     private String title;
-    private Integer completed;
+    private Boolean completed;
     private LocalDateTime date;
     private Priority priority;
     private Category category;
