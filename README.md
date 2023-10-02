@@ -84,5 +84,5 @@ The project follows a standard architecture:
 
 ## Usage
 
-- Access the frontend application by navigating to `http://localhost:4200` (http://localhost - with docker) in your web browser.
+- Access the frontend application by navigating to `http://localhost:4200` in your web browser.
 - Explore all the functionalities as described in the features.
